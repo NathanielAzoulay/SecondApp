@@ -83,8 +83,6 @@ public class Travel {
         this.clientPhone = clientPhone;
     }
 
-
-
     public void setClientEmail(String clientEmail) {
         this.clientEmail = clientEmail;
     }

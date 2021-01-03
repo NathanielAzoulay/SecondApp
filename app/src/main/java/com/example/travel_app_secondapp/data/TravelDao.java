@@ -18,6 +18,9 @@ public interface TravelDao {
     @Query("select * from travels where travelId=:id")
     LiveData<Travel> get(String id);
 
+    @Query("select * from travels where travels.requestType = 3")
+    LiveData<List<Travel>> getAllClosed();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(Travel travel);
 

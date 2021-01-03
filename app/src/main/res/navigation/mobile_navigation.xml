@@ -3,22 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_registered">
 
     <fragment
-        android:id="@+id/nav_gallery"
+        android:id="@+id/nav_registered"
         android:name="com.example.travel_app_secondapp.ui.registeredTravels.RegisteredTravelsFragment"
         android:label="@string/menu_registered_travels"
+        tools:layout="@layout/fragment_travels_registered" >
+        <argument
+            android:name="userEmail"
+            app:argType="string"
+            android:defaultValue="none" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_company"
+        android:name="com.example.travel_app_secondapp.ui.companyTravels.CompanyTravelsFragment"
+        android:label="@string/menu_company_travels"
         tools:layout="@layout/fragment_travels_company" />
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.example.travel_app_secondapp.ui.companyTravels.CompanyTravelsFragment"
-        android:label="@string/menu_company_travels"
-        tools:layout="@layout/fragment_travels_registered" />
-
-    <fragment
-        android:id="@+id/nav_slideshow"
+        android:id="@+id/nav_history"
         android:name="com.example.travel_app_secondapp.ui.historyTravels.HistoryTravelsFragment"
         android:label="@string/menu_history_travels"
         tools:layout="@layout/fragment_travels_history" />

@@ -1,4 +1,4 @@
-package com.example.travel_app_secondapp.ui.companyTravels;
+ package com.example.travel_app_secondapp.ui.companyTravels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

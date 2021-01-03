@@ -103,10 +103,10 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                             savePreferences();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("myEmail",user.getEmail());
+                            intent.putExtra("userEmail",user.getEmail());
                             startActivity(intent);
                         } else {
-                            Log.e(TAG, "signIn: Fail!", task.getException());
+                            Log.e(TAG, "signIn: Failed!", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed!", Toast.LENGTH_SHORT).show();
                             errorText.setText("Email or password are incorrect");
                         }
@@ -170,5 +170,4 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.form.setEmail(sharedPreferences.getString("Email",""));
         loginViewModel.form.setPassword(sharedPreferences.getString("Pss",""));
     }
-
 }

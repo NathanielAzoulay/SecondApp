@@ -1,5 +1,6 @@
 package com.example.travel_app_secondapp.data;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 
@@ -15,6 +16,6 @@ public interface ITravelRepository {
 
     void addTravel(Travel travel);
     void updateTravel(Travel travel);
-    MutableLiveData<List<Travel>> getAllTravels();
+    LiveData<List<Travel>> getAllTravels();
     MutableLiveData<Boolean> getIsSuccess();
 }

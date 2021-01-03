@@ -58,6 +58,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
                 if (dataSnapshot.exists()) { // there is any thing there
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                             Travel travel = snapshot.getValue(Travel.class); //brings all the items
+                            travel.setTravelId(snapshot.getKey());
                             allTravelsList.add(travel); // to the list to be presented
                         }
                 }
@@ -86,6 +87,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
         travels.child(id).setValue(p).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                Log.e(TAG, "Travel Added");
                 isSuccess.setValue(true);
             }
         }).addOnFailureListener(new OnFailureListener() {

@@ -1,6 +1,7 @@
 package com.example.travel_app_secondapp.ui.registeredTravels;
 
 import android.app.Application;
+import android.view.View;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -17,12 +18,13 @@ public class RegisteredTravelsViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> mText;
     ITravelRepository registeredTravelsRepository;
-
-    public RegisteredTravelsViewModel(Application application) {
+    public String userEmail;
+    public RegisteredTravelsViewModel(Application application, String userEmail) {
         super(application);
         mText = new MutableLiveData<>();
         mText.setValue("This is registered travels fragment");
-        registeredTravelsRepository =  TravelRepository.getInstance(application);
+        this.userEmail = userEmail;
+        registeredTravelsRepository =  TravelRepository.getInstance(application, userEmail);
     }
 
     void addTravel(Travel travel)
@@ -33,9 +35,8 @@ public class RegisteredTravelsViewModel extends AndroidViewModel {
     {
         registeredTravelsRepository.updateTravel(travel);
     }
-    MutableLiveData<List<Travel>> getAllTravels()
-    {
-        return (MutableLiveData<List<Travel>>)registeredTravelsRepository.getAllTravels();
+    LiveData<List<Travel>> getAllTravels() {
+        return (LiveData<List<Travel>>)registeredTravelsRepository.getAllTravels();
     }
     MutableLiveData<Boolean> getIsSuccess()
     {
@@ -46,4 +47,6 @@ public class RegisteredTravelsViewModel extends AndroidViewModel {
     public LiveData<String> getText() {
         return mText;
     }
+
 }
+
