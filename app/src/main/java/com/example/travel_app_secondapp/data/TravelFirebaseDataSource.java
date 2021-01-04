@@ -29,9 +29,29 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     DatabaseReference travels = firebaseDatabase.getReference("ExistingTravels");
 
-
-
     private static TravelFirebaseDataSource instance;
+
+    ValueEventListener valueEventListener = new ValueEventListener() {
+        // for each change in the reference to travelRequests this event will activate
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            allTravelsList.clear(); // clear the old one
+            if (dataSnapshot.exists()) { // there is any thing there
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Travel travel = snapshot.getValue(Travel.class); //brings all the items
+                    travel.setTravelId(snapshot.getKey());
+                    allTravelsList.add(travel); // to the list to be presented
+                }
+            }
+            if (notifyToTravelListListener != null) // if there was something that change there
+                notifyToTravelListListener.onTravelsChanged(); // notify the listener
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+    };
 
     /**
      * singleton attribute
@@ -50,28 +70,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
      */
     private TravelFirebaseDataSource() {
         allTravelsList = new ArrayList<>();
-        travels.addValueEventListener(new ValueEventListener() {
-            // for each change in the reference to travelRequests this event will activate
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                allTravelsList.clear(); // clear the old one
-                if (dataSnapshot.exists()) { // there is any thing there
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            Travel travel = snapshot.getValue(Travel.class); //brings all the items
-                            travel.setTravelId(snapshot.getKey());
-                            allTravelsList.add(travel); // to the list to be presented
-                        }
-                }
-                if (notifyToTravelListListener != null) // if the was something that change there
-                    notifyToTravelListListener.onTravelsChanged(); // notify the listener
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
+        travels.addValueEventListener(valueEventListener);
     }
 
 
@@ -98,7 +97,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
         });
     }
 
-
+    @Override
     public  void removeTravel(String id) {
           travels.child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -132,4 +131,8 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
     public MutableLiveData<Boolean> getIsSuccess() {
         return isSuccess;
     }
+
+
+
+
 }

@@ -17,6 +17,7 @@ import com.example.travel_app_secondapp.R;
 import com.example.travel_app_secondapp.data.UserViewModelFactory;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.ui.MainActivity;
+import com.example.travel_app_secondapp.ui.historyTravels.HistoryTravelsViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RegisteredTravelsFragment extends Fragment {
+
     private final List<Travel> travelList = new ArrayList<>();
     private RegisteredTravelsViewModel registeredTravelsViewModel;
     private String TAG = "RegisteredTravelsFragment";
@@ -33,8 +35,7 @@ public class RegisteredTravelsFragment extends Fragment {
 
         MainActivity parentActivity = (MainActivity) getActivity();
         // TODO: add catch exception for this if fail
-        registeredTravelsViewModel =
-                new ViewModelProvider(this, new UserViewModelFactory(parentActivity.getApplication(), parentActivity.getUserEmail())).get(RegisteredTravelsViewModel.class);
+        registeredTravelsViewModel  = new ViewModelProvider(this).get(RegisteredTravelsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
         textView.setOnClickListener(new View.OnClickListener()
@@ -42,7 +43,7 @@ public class RegisteredTravelsFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                UpdateForRoomDataBase();
+                TravelAccepted();
             }
         });
         registeredTravelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -51,7 +52,7 @@ public class RegisteredTravelsFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        registeredTravelsViewModel.getAllTravels().observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
+        registeredTravelsViewModel.getAllRegisteredTravels(parentActivity.getUserEmail()).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
                 travelList.clear();
@@ -74,21 +75,34 @@ public class RegisteredTravelsFragment extends Fragment {
                     }
                 }
             }});
-
         return root;
     }
 
 
-
-    public void getTravelRequests(){
-
-    }
-
-    public void UpdateForRoomDataBase() {
+    // TODO: logical business should be at least in viewModel
+    public void UpdateCompanyTravel() throws NullPointerException{
+        //get position from recyclerView
+        //get position from spinner
         Travel travel = travelList.get(0);
-        travel.setRequestType(Travel.RequestType.close);
+        String companyID = "??";
+        Iterator it = travel.getCompany().entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            pair.setValue(false);
+        }
+        travel.getCompany().put(companyID,true);
         registeredTravelsViewModel.updateTravel(travel);
     }
+
+    // TODO: logical business should be at least in viewModel
+    public void TravelAccepted() {
+        //get position from recyclerView
+        Travel travel = travelList.get(0);
+        travel.setRequestType(Travel.RequestType.accepted);
+        registeredTravelsViewModel.updateTravel(travel);
+    }
+
+
 
 
 

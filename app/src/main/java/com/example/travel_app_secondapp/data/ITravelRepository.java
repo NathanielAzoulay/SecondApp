@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 
 import com.example.travel_app_secondapp.entities.Travel;
+import com.example.travel_app_secondapp.entities.UserLocation;
 
 import java.util.List;
 /**
@@ -16,6 +17,11 @@ public interface ITravelRepository {
 
     void addTravel(Travel travel);
     void updateTravel(Travel travel);
-    LiveData<List<Travel>> getAllTravels();
+    void removeTravel(Travel travel);
+
+    LiveData<List<Travel>> getAllTravels(boolean fireBase);
+    LiveData<List<Travel>> getAllRegisteredTravels(String userEmail);
+    LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double max);
+    LiveData<List<Travel>> getAllHistoryTravels();
     MutableLiveData<Boolean> getIsSuccess();
 }

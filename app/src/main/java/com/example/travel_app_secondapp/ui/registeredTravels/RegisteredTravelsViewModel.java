@@ -12,41 +12,44 @@ import com.example.travel_app_secondapp.data.ITravelRepository;
 import com.example.travel_app_secondapp.data.TravelRepository;
 import com.example.travel_app_secondapp.entities.Travel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegisteredTravelsViewModel extends AndroidViewModel {
 
     private MutableLiveData<String> mText;
-    ITravelRepository registeredTravelsRepository;
-    public String userEmail;
-    public RegisteredTravelsViewModel(Application application, String userEmail) {
+    ITravelRepository travelsRepository;
+    public RegisteredTravelsViewModel(Application application) {
         super(application);
         mText = new MutableLiveData<>();
         mText.setValue("This is registered travels fragment");
-        this.userEmail = userEmail;
-        registeredTravelsRepository =  TravelRepository.getInstance(application, userEmail);
+        travelsRepository =  TravelRepository.getInstance(application);
     }
 
     void addTravel(Travel travel)
     {
-        registeredTravelsRepository.addTravel(travel);
+        travelsRepository.addTravel(travel);
     }
     void updateTravel(Travel travel)
     {
-        registeredTravelsRepository.updateTravel(travel);
+        travelsRepository.updateTravel(travel);
     }
-    LiveData<List<Travel>> getAllTravels() {
-        return (LiveData<List<Travel>>)registeredTravelsRepository.getAllTravels();
+    LiveData<List<Travel>> getAllRegisteredTravels(String userEmail) {
+        return (LiveData<List<Travel>>)travelsRepository.getAllRegisteredTravels(userEmail);
     }
     MutableLiveData<Boolean> getIsSuccess()
     {
-        return registeredTravelsRepository.getIsSuccess();
+        return travelsRepository.getIsSuccess();
     }
 
 
     public LiveData<String> getText() {
         return mText;
     }
+
+
+
+
 
 }
 

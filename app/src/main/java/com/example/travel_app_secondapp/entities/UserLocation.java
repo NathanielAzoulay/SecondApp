@@ -1,10 +1,16 @@
 package com.example.travel_app_secondapp.entities;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
 
 //import java.io.Serializable;
 
@@ -30,6 +36,14 @@ public class UserLocation implements Parcelable {
 
     public double getLon() {
         return lon;
+    }
+
+    public void setLat(double lat){
+        this.lat = lat;
+    }
+
+    public void setLon(double lon){
+        this.lon = lon;
     }
 
     public UserLocation(double lat, double lon) {
@@ -69,4 +83,6 @@ public class UserLocation implements Parcelable {
         this.lat = in.readDouble();
         this.lon = in.readDouble();
     }
+
+
 }
