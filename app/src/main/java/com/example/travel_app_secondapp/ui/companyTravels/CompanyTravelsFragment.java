@@ -31,6 +31,9 @@ import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 import com.example.travel_app_secondapp.ui.MainActivity;
 import com.example.travel_app_secondapp.ui.registeredTravels.RegisteredTravelsViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class CompanyTravelsFragment extends Fragment {
     UserLocation userLocation;
     private final double MAX_DIST = 800.0;
 
+    private FusedLocationProviderClient fusedLocationClient;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -69,6 +74,9 @@ public class CompanyTravelsFragment extends Fragment {
         companyTravelsViewModel = new ViewModelProvider(this).get(CompanyTravelsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
+
+
+
         companyTravelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -105,6 +113,7 @@ public class CompanyTravelsFragment extends Fragment {
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                // TODO: check if last location different enough from the current (example: 100 meters)
                 // Called when a new location is found by the network location provider.
                 Toast.makeText(parentActivity.getBaseContext(), Double.toString(location.getLatitude()) + " : " + Double.toString(location.getLongitude()), Toast.LENGTH_LONG).show();
                 userLocation.setLat(location.getLatitude());
@@ -150,6 +159,21 @@ public class CompanyTravelsFragment extends Fragment {
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20*1000, 0, locationListener);
+
+                // TODO: for getting first location when creating the fragment
+//            fusedLocationClient = LocationServices.getFusedLocationProviderClient(parentActivity);
+//            fusedLocationClient.getLastLocation()
+//                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+//                        @Override
+//                        public void onSuccess(Location location) {
+//                            // Got last known location. In some rare situations this can be null.
+//                            if (location != null) {
+//                                // Logic to handle location object
+//                            }
+//                        }
+//                    });
+            //textView.setText(getPlace(new Location()));
+
         }
     }
 
@@ -160,11 +184,9 @@ public class CompanyTravelsFragment extends Fragment {
         if (requestCode == 5) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
             } else {
-                //Toast.makeText(this, "Until you grant the permission, we canot display the location", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
             }
         }
 

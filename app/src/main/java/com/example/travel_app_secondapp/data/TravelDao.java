@@ -18,6 +18,7 @@ public interface TravelDao {
     @Query("select * from travels where travelId=:id")
     LiveData<Travel> get(String id);
 
+    //TODO: filter the before setValue to ROOM for requestType="closed"
     @Query("select * from travels where travels.requestType = 3")
     LiveData<List<Travel>> getAllClosed();
 

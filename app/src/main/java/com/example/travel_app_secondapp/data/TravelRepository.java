@@ -32,9 +32,6 @@ public class TravelRepository implements ITravelRepository {
 
 
     String userEmail = "none";
-    UserLocation userLocation;
-    double maxDist = 0;
-
     private static TravelRepository instance;
     /**
      * singleton attribute
@@ -48,6 +45,7 @@ public class TravelRepository implements ITravelRepository {
 
     private TravelRepository(Application application) {
         travelDataSource = TravelFirebaseDataSource.getInstance();
+        // TODO: singleton
         historyDataSource = new HistoryDataSource(application.getApplicationContext());
         // here (in the constructor) we implements the notifyListener of the data source.
         ITravelDataSource.NotifyToTravelListListener notifyToTravelListListener = new ITravelDataSource.NotifyToTravelListListener() {
@@ -56,6 +54,7 @@ public class TravelRepository implements ITravelRepository {
                 travelList = travelDataSource.getAllTravels();
                 registeredMutableLiveData.setValue(filterRegisteredTravels());
                 mutableLiveData.setValue(travelList);
+                //TODO: filter requests: closed
                 historyDataSource.clearTable();
                 historyDataSource.addTravel(travelList);
             }
@@ -94,10 +93,8 @@ public class TravelRepository implements ITravelRepository {
     }
 
     public LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double maxDist){
-        this.userLocation = userLocation;
-        this.maxDist = maxDist;
         if (travelList != null) {
-            companyMutableLiveData.setValue(filterCompanyTravels());
+            companyMutableLiveData.setValue(filterCompanyTravels(userLocation, maxDist));
         }
         return companyMutableLiveData;
     }
@@ -130,22 +127,15 @@ public class TravelRepository implements ITravelRepository {
      * get all travel requests which which close to a known location, and has status "sent"
      * @return the list which filtered by close range and status of "sent"
      */
-    public List<Travel> filterCompanyTravels(){
+    public List<Travel> filterCompanyTravels(UserLocation userLocation, double maxDist){
         travelsCompany.clear();
         travelList = travelDataSource.getAllTravels();
         for(Travel travel : travelList){
             UserLocation travelLoc = travel.getTravelLocation(); // check maybe his source is in our area
             if (calculateDistance(userLocation.getLat(),userLocation.getLon(),travelLoc.getLat(),travelLoc.getLon()) < maxDist
                     && travel.getRequestType() == Travel.RequestType.sent)
+            {
                 travelsCompany.add(travel);
-            else {
-                for (UserLocation dstLoc : travel.getDestLocations()) { // check maybe one of his destinations are in our area
-                    if (calculateDistance(userLocation.getLat(), userLocation.getLon(), dstLoc.getLat(), dstLoc.getLon()) < maxDist
-                            && travel.getRequestType() == Travel.RequestType.sent){
-                        travelsCompany.add(travel);
-                        break;
-                    }
-                }
             }
         }
         return travelsCompany;

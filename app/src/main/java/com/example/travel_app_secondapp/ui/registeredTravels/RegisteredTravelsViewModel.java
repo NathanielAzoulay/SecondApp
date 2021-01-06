@@ -35,7 +35,7 @@ public class RegisteredTravelsViewModel extends AndroidViewModel {
         travelsRepository.updateTravel(travel);
     }
     LiveData<List<Travel>> getAllRegisteredTravels(String userEmail) {
-        return (LiveData<List<Travel>>)travelsRepository.getAllRegisteredTravels(userEmail);
+        return travelsRepository.getAllRegisteredTravels(userEmail);
     }
     MutableLiveData<Boolean> getIsSuccess()
     {

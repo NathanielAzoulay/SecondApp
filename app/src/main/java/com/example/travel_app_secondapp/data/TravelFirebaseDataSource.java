@@ -39,6 +39,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
             if (dataSnapshot.exists()) { // there is any thing there
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     Travel travel = snapshot.getValue(Travel.class); //brings all the items
+                    // TODO: check if //
                     travel.setTravelId(snapshot.getKey());
                     allTravelsList.add(travel); // to the list to be presented
                 }
