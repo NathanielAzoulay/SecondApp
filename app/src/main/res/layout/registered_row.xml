@@ -1,106 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import
-            type="com.example.travel_app_secondapp.entities.Travel.DateConverter"/>
+
+        <import type="com.example.travel_app_secondapp.entities.Travel.DateConverter" />
+
         <variable
             name="travel"
             type="com.example.travel_app_secondapp.entities.Travel" />
+
         <variable
             name="registered"
             type="com.example.travel_app_secondapp.adapters.registeredAdapter.IRegistered" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:background="#EDF8E0">
-
-        <ImageView
-            android:id="@+id/iconImageView"
-            android:layout_width="75dp"
-            android:layout_height="130dp"
-            android:padding="8dp"
-            android:src="@drawable/icon_bus"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <Spinner
-            android:id="@+id/companySpinner"
-            android:layout_width="174dp"
-            android:layout_height="45dp"
-            android:entries="@{travel.companyKeys}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/createdTextView"
-            app:layout_constraintTop_toBottomOf="@+id/createdTextView" />
-
-        <TextView
-            android:id="@+id/startTextView"
-            android:layout_width="140dp"
-            android:layout_height="26dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-
-            android:text="@{`start: ` + DateConverter.dateToTimestamp(travel.arrivalDate)}"
-
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/endTextView"
-            app:layout_constraintStart_toEndOf="@+id/iconImageView"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:background="#E7F6D8"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/createdTextView"
-            android:layout_width="140dp"
-            android:layout_height="26dp"
+            android:layout_width="403dp"
+            android:layout_height="17dp"
+            android:background="#96C678"
+            android:text="@{DateConverter.dateToTimestamp(travel.createDate)}"
+            android:textSize="12sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="131dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-            android:text="@{`created: ` + DateConverter.dateToTimestamp(travel.createDate)}"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@id/companySpinner"
-            app:layout_constraintStart_toStartOf="@+id/startTextView"
+            <ImageView
+                android:id="@+id/iconImageView"
+                android:layout_width="66dp"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:src="@drawable/ic_baseline_directions_bus_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            app:layout_constraintTop_toBottomOf="@+id/startTextView" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="8dp" >
 
-        <TextView
-            android:id="@+id/numPassengersTextView"
-            android:layout_width="140dp"
-            android:layout_height="26dp"
-            android:text="@{`passengers: ` + travel.numPassengers}"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/createdTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/createdTextView"
-            app:layout_constraintTop_toTopOf="@+id/createdTextView" />
+                <TextView
+                    android:id="@+id/startTextView"
+                    android:layout_width="205dp"
+                    android:layout_height="30dp"
+                    android:text="@{`start: ` + DateConverter.dateToTimestamp(travel.arrivalDate)}"
+                    android:textSize="14sp"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="74dp"
+                    tools:layout_editor_absoluteY="8dp" />
 
-        <TextView
-            android:id="@+id/endTextView"
-            android:layout_width="140dp"
-            android:layout_height="26dp"
-            android:text="@{`end: ` + DateConverter.dateToTimestamp(travel.travelDate)}"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/startTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/startTextView"
-            app:layout_constraintTop_toTopOf="@+id/startTextView" />
+                <TextView
+                    android:id="@+id/endTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:text="@{`end: ` + DateConverter.dateToTimestamp(travel.travelDate)}"
+                    android:textSize="14sp"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="75dp"
+                    tools:layout_editor_absoluteY="46dp" />
 
-        <Button
-            android:id="@+id/acceptButton"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:onClick="@{() -> registered.accept(companySpinner.getSelectedItem().toString(), travel)}"
-            android:text="accept"
-            app:layout_constraintBottom_toBottomOf="@+id/companySpinner"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/companySpinner"
-            app:layout_constraintTop_toTopOf="@+id/companySpinner"
-            app:layout_constraintVertical_bias="1.0" />
+                <Spinner
+                    android:id="@+id/companySpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:background="#3B000000"
+                    android:entries="@{travel.companyKeys}"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="74dp"
+                    tools:layout_editor_absoluteY="86dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/numPassengersTextView"
+                    android:layout_width="71dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="@{`` + travel.numPassengers}"
+                    android:textSize="25sp"
+                    android:textStyle="bold"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="304dp"
+                    tools:layout_editor_absoluteY="16dp" />
+                <Button
+                    android:id="@+id/acceptButton"
+                    android:layout_width="103dp"
+                    android:layout_height="47dp"
+                    android:onClick="@{() -> registered.accept(companySpinner.getSelectedItem().toString(), travel)}"
+                    android:text="accept"
+                    app:backgroundTint="#DD7F4B"
+                    tools:ignore="MissingConstraints"
+                    tools:layout_editor_absoluteX="293dp"
+                    tools:layout_editor_absoluteY="76dp" />
+            </LinearLayout>
+        </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </layout>
