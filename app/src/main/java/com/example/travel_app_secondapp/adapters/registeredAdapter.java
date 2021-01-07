@@ -56,8 +56,7 @@ public class registeredAdapter extends RecyclerView.Adapter<registeredAdapter.vi
     }
 
     public interface IRegistered {
-        void accept(Travel travel);
-
+        void accept(String selectedItem, Travel travel);
     }
 
 }

@@ -101,8 +101,8 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered {
 
 
     @Override
-    public void accept(Travel travel) {
-        Toast.makeText(parentActivity.getBaseContext(),travel.toString(), Toast.LENGTH_LONG).show();
+    public void accept(String selectedItem, Travel travel) {
+        Toast.makeText(parentActivity.getBaseContext(),selectedItem , Toast.LENGTH_LONG).show();
 
     }
 }

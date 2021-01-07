@@ -2,13 +2,18 @@ package com.example.travel_app_secondapp.entities;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
+import com.google.firebase.database.Exclude;
+
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +44,9 @@ public class Travel {
 	
     @TypeConverters(DateConverter.class)
     private Date arrivalDate;
-	
+
+    @TypeConverters(DateConverter.class)
+    private Date createDate;
 		
 	private HashMap<String, Boolean> company;
     
@@ -56,6 +63,7 @@ public class Travel {
     public RequestType getRequestType() { return this.requestType;}
     public Date getTravelDate() { return this.travelDate;}
     public Date getArrivalDate() { return this.arrivalDate;}
+    public Date getCreateDate() { return this.createDate;}
     public HashMap<String, Boolean> getCompany() { return this.company;}
 
 
@@ -107,16 +115,20 @@ public class Travel {
         this.arrivalDate = arrivalDate;
     }
 
+    public void setCreateDate(Date createDate)  {
+        this.createDate = createDate;
+    }
+
     public static class DateConverter {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        static SimpleDateFormat  format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
         @TypeConverter
-        public Date fromTimestamp(String date) throws ParseException {
+        public static  Date fromTimestamp(String date) throws ParseException {
             return (date == null ? null : format.parse(date));
         }
 
         @TypeConverter
-        public String dateToTimestamp(Date date) {
+        public static String dateToTimestamp(Date date) {
             return date == null ? null : format.format(date);
         }
     }
@@ -236,6 +248,12 @@ public class Travel {
                 ", numPassengers=" + numPassengers +
                 '}';
     }
+
+
+    public List<String> getCompanyKeys(){
+        return company!=null? new ArrayList<String>( company.keySet()) : null;
+    }
+
 }
 	
 	

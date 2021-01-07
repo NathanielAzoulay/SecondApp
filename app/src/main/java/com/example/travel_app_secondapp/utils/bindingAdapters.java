@@ -1,4 +1,4 @@
-package com.example.travel_app_secondapp.ui;
+package com.example.travel_app_secondapp.utils;
 
 import android.view.View;
 import android.widget.EditText;
@@ -82,6 +82,8 @@ public class bindingAdapters {
             return null;
         }
     }
+
+
 
 
 }
