@@ -224,6 +224,17 @@ public class Travel {
                 locationsString.append(ul.getLat()).append(" ").append(ul.getLon()).append(",");
             return locationsString.toString();
         }
+
+
+    }
+
+    @Override
+    public String toString() {
+        return "Travel{" +
+                "travelId='" + travelId + '\'' +
+                ", clientName='" + clientName + '\'' +
+                ", numPassengers=" + numPassengers +
+                '}';
     }
 }
 	

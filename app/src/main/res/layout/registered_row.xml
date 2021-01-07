@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="travel"
+            type="com.example.travel_app_secondapp.entities.Travel" />
+        <variable
+            name="registered"
+            type="com.example.travel_app_secondapp.adapters.registeredAdapter.IRegistered" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="155dp"
+            android:padding="8dp"
+            tools:ignore="MissingConstraints" />
+
+
+        <Spinner
+            android:id="@+id/companySpinner"
+            android:layout_width="195dp"
+            android:layout_height="46dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="59dp"
+            tools:layout_editor_absoluteY="89dp" />
+
+        <TextView
+            android:id="@+id/startTextView"
+            android:layout_width="149dp"
+            android:layout_height="26dp"
+            android:text="@{`start: ` + travel.arrivalDate}"
+            android:textSize="17sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="59dp"
+            tools:layout_editor_absoluteY="8dp" />
+
+        <TextView
+            android:id="@+id/createdTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="created : 10/10/2020"
+            android:textSize="17sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="59dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <TextView
+            android:id="@+id/numPassengersTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`passenger number: ` + travel.numPassengers}"
+            android:textSize="17sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="226dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <TextView
+            android:id="@+id/endTextView"
+            android:layout_width="153dp"
+            android:layout_height="25dp"
+            android:text="@{`end: ` + travel.travelDate}"
+            android:textSize="17sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="226dp"
+            tools:layout_editor_absoluteY="9dp" />
+
+        <Button
+            android:id="@+id/acceptButton"
+            android:layout_width="104dp"
+            android:layout_height="52dp"
+            android:text="accept"
+            android:onClick="@{() -> registered.accept(travel)}"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="291dp"
+            tools:layout_editor_absoluteY="83dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

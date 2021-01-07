@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,10 +15,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.travel_app_secondapp.R;
-import com.example.travel_app_secondapp.data.UserViewModelFactory;
+import com.example.travel_app_secondapp.adapters.registeredAdapter;
+import com.example.travel_app_secondapp.databinding.FragmentTravelsRegisteredBinding;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.ui.MainActivity;
-import com.example.travel_app_secondapp.ui.historyTravels.HistoryTravelsViewModel;
+
+import com.example.travel_app_secondapp.adapters.registeredAdapter.IRegistered;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,48 +28,41 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class RegisteredTravelsFragment extends Fragment {
+
+public class RegisteredTravelsFragment extends Fragment implements IRegistered {
 
     private final List<Travel> travelList = new ArrayList<>();
     private RegisteredTravelsViewModel registeredTravelsViewModel;
     private String TAG = "RegisteredTravelsFragment";
+    private MainActivity parentActivity;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        MainActivity parentActivity = (MainActivity) getActivity();
+        parentActivity = (MainActivity) getActivity();
         // TODO: add catch exception for this if fail
-        registeredTravelsViewModel  = new ViewModelProvider(this).get(RegisteredTravelsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        textView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                TravelAccepted();
-            }
-        });
-        registeredTravelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        registeredTravelsViewModel = new ViewModelProvider(this).get(RegisteredTravelsViewModel.class);
+//        View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
+
+        FragmentTravelsRegisteredBinding registeredBinding = FragmentTravelsRegisteredBinding.inflate(inflater,container,false);
+        registeredAdapter adapter = new registeredAdapter(travelList,this);
+        registeredBinding.registeredRecyclerView.setAdapter(adapter);
+
         registeredTravelsViewModel.getAllRegisteredTravels(parentActivity.getUserEmail()).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
                 travelList.clear();
                 travelList.addAll(travels);
+                adapter.notifyDataSetChanged();
                 for (Travel tmp : travels) {
                     Log.e(TAG, tmp.getClientName() + ":  ");
-                    Log.e(TAG, tmp.getTravelId() );
-                    Log.e(TAG, tmp.getClientPhone() );
-                    Log.e(TAG, tmp.getRequestType().toString() );
-                    Log.e(TAG, tmp.getArrivalDate() +"\n");
+                    Log.e(TAG, tmp.getTravelId());
+                    Log.e(TAG, tmp.getClientPhone());
+                    Log.e(TAG, tmp.getRequestType().toString());
+                    Log.e(TAG, tmp.getArrivalDate() + "\n");
                     //https://www.callicoder.com/java-hashmap/
                     //HashMap is a hash table based implementation of Java’s Map interface
                     HashMap<String, Boolean> company = tmp.getCompany();
-                    if(company != null){
+                    if (company != null) {
                         Iterator it = tmp.getCompany().entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry) it.next();
@@ -74,13 +70,14 @@ public class RegisteredTravelsFragment extends Fragment {
                         }
                     }
                 }
-            }});
-        return root;
+            }
+        });
+        return registeredBinding.getRoot();
     }
 
 
     // TODO: logical business should be at least in viewModel
-    public void UpdateCompanyTravel() throws NullPointerException{
+    public void UpdateCompanyTravel() throws NullPointerException {
         //get position from recyclerView
         //get position from spinner
         Travel travel = travelList.get(0);
@@ -90,7 +87,7 @@ public class RegisteredTravelsFragment extends Fragment {
             Map.Entry pair = (Map.Entry) it.next();
             pair.setValue(false);
         }
-        travel.getCompany().put(companyID,true);
+        travel.getCompany().put(companyID, true);
         registeredTravelsViewModel.updateTravel(travel);
     }
 
@@ -103,7 +100,9 @@ public class RegisteredTravelsFragment extends Fragment {
     }
 
 
+    @Override
+    public void accept(Travel travel) {
+        Toast.makeText(parentActivity.getBaseContext(),travel.toString(), Toast.LENGTH_LONG).show();
 
-
-
+    }
 }

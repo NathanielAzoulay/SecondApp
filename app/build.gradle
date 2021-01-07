@@ -11,7 +11,11 @@ android {
     buildFeatures {
         dataBinding true
     }
-    
+
+    dataBinding {
+        enabled=true
+    }
+
     defaultConfig {
         applicationId "com.example.travel_app_secondapp"
         minSdkVersion 16

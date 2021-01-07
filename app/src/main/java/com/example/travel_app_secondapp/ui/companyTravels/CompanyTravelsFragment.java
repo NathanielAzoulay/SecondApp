@@ -73,7 +73,7 @@ public class CompanyTravelsFragment extends Fragment {
         userEmail = parentActivity.getUserEmail();
         companyTravelsViewModel = new ViewModelProvider(this).get(CompanyTravelsViewModel.class);
         View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
+        final TextView textView = root.findViewById(R.id.text_gallery);
 
 
 
