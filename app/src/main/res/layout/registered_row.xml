@@ -6,7 +6,7 @@
     <data>
 
         <import type="com.example.travel_app_secondapp.entities.Travel.DateConverter" />
-
+        <import type="com.example.travel_app_secondapp.entities.Travel.RequestType" />
         <variable
             name="travel"
             type="com.example.travel_app_secondapp.entities.Travel" />
@@ -25,8 +25,8 @@
 
         <TextView
             android:id="@+id/createdTextView"
-            android:layout_width="403dp"
-            android:layout_height="17dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="#96C678"
             android:text="@{DateConverter.dateToTimestamp(travel.createDate)}"
             android:textSize="12sp"
@@ -40,8 +40,10 @@
 
             <ImageView
                 android:id="@+id/iconImageView"
-                android:layout_width="66dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:minWidth="@android:dimen/app_icon_size"
+                android:minHeight="@android:dimen/app_icon_size"
                 android:padding="8dp"
                 android:src="@drawable/ic_baseline_directions_bus_24"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -52,12 +54,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="8dp" >
+                android:padding="8dp"
+                android:layout_weight="2">
 
                 <TextView
                     android:id="@+id/startTextView"
-                    android:layout_width="205dp"
-                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="@{`start: ` + DateConverter.dateToTimestamp(travel.arrivalDate)}"
                     android:textSize="14sp"
                     tools:ignore="MissingConstraints"
@@ -67,8 +70,8 @@
                 <TextView
                     android:id="@+id/endTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:text="@{`end: ` + DateConverter.dateToTimestamp(travel.travelDate)}"
+                    android:layout_height="wrap_content"
+                    android:text="@{`end:   ` + DateConverter.dateToTimestamp(travel.travelDate)}"
                     android:textSize="14sp"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="75dp"
@@ -77,10 +80,12 @@
                 <Spinner
                     android:id="@+id/companySpinner"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="wrap_content"
                     android:background="#3B000000"
                     android:entries="@{travel.companyKeys}"
                     tools:ignore="MissingConstraints"
+                    android:enabled="@{travel.requestType == RequestType.sent}"
+                    android:clickable="@{travel.requestType == RequestType.sent}"
                     tools:layout_editor_absoluteX="74dp"
                     tools:layout_editor_absoluteY="86dp"
                     />
@@ -94,7 +99,7 @@
                 <TextView
                     android:id="@+id/numPassengersTextView"
                     android:layout_width="71dp"
-                    android:layout_height="58dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="@{`` + travel.numPassengers}"
@@ -106,7 +111,7 @@
                 <Button
                     android:id="@+id/acceptButton"
                     android:layout_width="103dp"
-                    android:layout_height="47dp"
+                    android:layout_height="wrap_content"
                     android:onClick="@{() -> registered.accept(companySpinner.getSelectedItem().toString(), travel)}"
                     android:text="accept"
                     app:backgroundTint="#DD7F4B"

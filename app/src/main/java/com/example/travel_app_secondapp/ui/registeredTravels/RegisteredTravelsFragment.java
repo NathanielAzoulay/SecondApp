@@ -5,11 +5,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.databinding.adapters.AdapterViewBindingAdapter;
+import androidx.databinding.adapters.ViewBindingAdapter;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,12 +32,13 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RegisteredTravelsFragment extends Fragment implements IRegistered {
+public class RegisteredTravelsFragment extends Fragment implements IRegistered{//, AdapterView.OnItemSelectedListener {
 
     private final List<Travel> travelList = new ArrayList<>();
     private RegisteredTravelsViewModel registeredTravelsViewModel;
     private String TAG = "RegisteredTravelsFragment";
     private MainActivity parentActivity;
+    FragmentTravelsRegisteredBinding registeredBinding;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
@@ -43,7 +47,7 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered {
         registeredTravelsViewModel = new ViewModelProvider(this).get(RegisteredTravelsViewModel.class);
 //        View root = inflater.inflate(R.layout.fragment_travels_registered, container, false);
 
-        FragmentTravelsRegisteredBinding registeredBinding = FragmentTravelsRegisteredBinding.inflate(inflater,container,false);
+        registeredBinding = FragmentTravelsRegisteredBinding.inflate(inflater,container,false);
         registeredAdapter adapter = new registeredAdapter(travelList,this);
         registeredBinding.registeredRecyclerView.setAdapter(adapter);
 
@@ -103,6 +107,10 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered {
     @Override
     public void accept(String selectedItem, Travel travel) {
         Toast.makeText(parentActivity.getBaseContext(),selectedItem , Toast.LENGTH_LONG).show();
-
+        travel.getCompany().clear();
+        travel.getCompany().put(selectedItem, true);
+        travel.setRequestType(Travel.RequestType.accepted);
+        registeredTravelsViewModel.updateTravel(travel);
     }
+
 }

@@ -1,9 +1,12 @@
 package com.example.travel_app_secondapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +55,21 @@ public class registeredAdapter extends RecyclerView.Adapter<registeredAdapter.vi
         public viewHolder(@NonNull RegisteredRowBinding binding) {
             super(binding.getRoot());
             registeredRowBinding = binding;
+
+//            registeredRowBinding.companySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                int check = 0;
+//                @Override
+//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        String h= (String) registeredRowBinding.companySpinner.getAdapter().getItem(position);
+//                        Log.i("tatatat",h);
+//                        travels.get(getAdapterPosition()).getCompany().get(h);
+//                }
+//
+//                @Override
+//                public void onNothingSelected(AdapterView<?> parent) {
+//
+//                }
+//            });
         }
     }
 

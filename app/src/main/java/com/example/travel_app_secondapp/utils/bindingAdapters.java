@@ -1,7 +1,9 @@
 package com.example.travel_app_secondapp.utils;
 
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
@@ -82,8 +84,5 @@ public class bindingAdapters {
             return null;
         }
     }
-
-
-
 
 }

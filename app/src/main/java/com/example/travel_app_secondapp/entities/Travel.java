@@ -249,8 +249,23 @@ public class Travel {
                 '}';
     }
 
-
+    @Exclude
+    @Ignore
     public List<String> getCompanyKeys(){
+//	    if(company!=null){
+//            List<String> stringList = new ArrayList<String>( company.keySet());
+//            String firstItem = "";
+//            for (String item : stringList){
+//                if (company.get(item) == true){
+//                    firstItem = item;
+//                    break;
+//                }
+//            }
+//            stringList.remove(firstItem);
+//            stringList.add(firstItem);
+//            return stringList;
+//        }
+//	    return null;
         return company!=null? new ArrayList<String>( company.keySet()) : null;
     }
 

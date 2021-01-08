@@ -20,20 +20,19 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.travel_app_secondapp.R;
-import com.example.travel_app_secondapp.data.UserViewModelFactory;
+import com.example.travel_app_secondapp.adapters.companyAdapter;
+import com.example.travel_app_secondapp.adapters.registeredAdapter;
+import com.example.travel_app_secondapp.databinding.FragmentTravelsCompanyBinding;
+import com.example.travel_app_secondapp.databinding.FragmentTravelsRegisteredBinding;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 import com.example.travel_app_secondapp.ui.MainActivity;
-import com.example.travel_app_secondapp.ui.registeredTravels.RegisteredTravelsViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
-public class CompanyTravelsFragment extends Fragment {
+public class CompanyTravelsFragment extends Fragment  implements companyAdapter.ICompany {
 
     private final List<Travel> travelList = new ArrayList<>();
     private CompanyTravelsViewModel companyTravelsViewModel;
@@ -59,8 +58,9 @@ public class CompanyTravelsFragment extends Fragment {
     LocationListener locationListener;
     MainActivity parentActivity;
     UserLocation userLocation;
-    private final double MAX_DIST = 800.0;
+    private final double MAX_DIST = 8000.0;
 
+    FragmentTravelsCompanyBinding companyBinding;
     private FusedLocationProviderClient fusedLocationClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -72,23 +72,19 @@ public class CompanyTravelsFragment extends Fragment {
 
         userEmail = parentActivity.getUserEmail();
         companyTravelsViewModel = new ViewModelProvider(this).get(CompanyTravelsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_travels_company, container, false);
-        final TextView textView = root.findViewById(R.id.text_gallery);
+        //View root = inflater.inflate(R.layout.fragment_travels_company, container, false);
 
 
-
-        companyTravelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+        companyBinding = FragmentTravelsCompanyBinding.inflate(inflater,container,false);
+        companyAdapter adapter = new companyAdapter(travelList,this);
+        companyBinding.companyRecyclerView.setAdapter(adapter);
 
         companyTravelsViewModel.getAllCompanyTravels(userLocation, MAX_DIST).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
                 travelList.clear();
                 travelList.addAll(travels);
+                adapter.notifyDataSetChanged();
                 for (Travel tmp : travels) {
                     Log.e(TAG, tmp.getClientName() + ":  ");
                     Log.e(TAG, tmp.getTravelId());
@@ -119,10 +115,11 @@ public class CompanyTravelsFragment extends Fragment {
                 userLocation.setLat(location.getLatitude());
                 userLocation.setLon(location.getLongitude());
                 // TODO:loader.visibility.GONE or something like that...
-                textView.setText(getPlace(location));
+                //textView.setText(getPlace(location));
 
                 if (companyTravelsViewModel != null)
                     companyTravelsViewModel.getAllCompanyTravels(userLocation, MAX_DIST);
+                adapter.notifyDataSetChanged();
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -148,7 +145,7 @@ public class CompanyTravelsFragment extends Fragment {
 //        };
 //        timer.start();
 
-        return root;
+        return companyBinding.getRoot();
     }
 
     private void getLocation() {
@@ -193,18 +190,18 @@ public class CompanyTravelsFragment extends Fragment {
     }
 
 
-
-    public String getPlace(Location location) {
+    @Override
+    public String getPlace(UserLocation location) {
 
         Geocoder geocoder = new Geocoder(parentActivity.getBaseContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
-            addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            addresses = geocoder.getFromLocation(location.getLat(), location.getLon(), 1);
             if (addresses.size() > 0) {
                 return addresses.get(0).getAddressLine(0);
             }
 
-            return "unknown place: \n ("+location.getLongitude()+" , "+location.getLatitude()+")";
+            return "unknown place: \n ("+location.getLat()+" , "+location.getLon()+")";
         }
         catch(
                 IOException e)
@@ -233,5 +230,19 @@ public class CompanyTravelsFragment extends Fragment {
         companyTravelsViewModel.updateTravel(travel);
     }
 
+
+    @Override
+    public void accept(Travel travel) {
+
+    }
+
+    @Override
+    public List<String> getPlaces(List<UserLocation> locations) {
+        List<String> places = new ArrayList<>();
+        for (UserLocation location : locations){
+            places.add(getPlace(location));
+        }
+        return places;
+    }
 
 }

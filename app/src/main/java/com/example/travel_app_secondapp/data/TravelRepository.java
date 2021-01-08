@@ -116,8 +116,8 @@ public class TravelRepository implements ITravelRepository {
         travelsRegistered.clear();
         travelList = travelDataSource.getAllTravels();
         for(Travel travel : travelList){
-            if (travel.getClientEmail().equals(userEmail)//)
-                    && travel.getRequestType() == Travel.RequestType.sent)
+            if (travel.getClientEmail().equals(userEmail))
+                    //&& travel.getRequestType() == Travel.RequestType.sent)
                 travelsRegistered.add(travel);
         }
         return travelsRegistered;
