@@ -3,12 +3,14 @@ package com.example.travel_app_secondapp.ui.companyTravels;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -186,7 +190,19 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
                 //Toast.makeText(this, "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
             }
         }
-
+//        if (requestCode == 4){
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                    // permission was granted, yay! Do the phone call
+//
+//                } else {
+//
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                }
+//        }
     }
 
 
@@ -235,6 +251,44 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     public void accept(Travel travel) {
 
     }
+
+    @Override
+    public void sendEmail(String emailAddress){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Travel Application Invitation For Your Requested Travel");
+        if (intent.resolveActivity(parentActivity.getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void phoneCall(String phoneNumber){
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:"+phoneNumber));
+        startActivity(intent);
+//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+//        // Here, thisActivity is the current activity
+//        if (ContextCompat.checkSelfPermission(parentActivity,
+//                Manifest.permission.CALL_PHONE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//
+//            ActivityCompat.requestPermissions(parentActivity,
+//                    new String[]{Manifest.permission.CALL_PHONE}, 4);
+//            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+//            // app-defined int constant. The callback method gets the
+//            // result of the request.
+//        } else {
+//            //You already have permission
+//            try {
+//                startActivity(intent);
+//            } catch(SecurityException e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
+
 
     @Override
     public List<String> getPlaces(List<UserLocation> locations) {

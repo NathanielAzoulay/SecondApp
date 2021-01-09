@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
 
     <data>
         <variable
@@ -12,6 +14,8 @@
             type="com.example.travel_app_secondapp.adapters.companyAdapter.ICompany" />
     </data>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,19 +23,18 @@
         android:background="#9BD8A5"
         android:orientation="horizontal">
 
-
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
             android:orientation="vertical"
-            android:padding="8dp">
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="4dp">
 
                 <TextView
                     android:id="@+id/nameTextView"
@@ -42,9 +45,8 @@
                     android:gravity="center"
                     android:text="@{`` + travel.clientName}"
                     android:textSize="18sp"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteX="74dp"
-                    tools:layout_editor_absoluteY="8dp" />
+                    android:textStyle="bold"
+                    tools:ignore="MissingConstraints" />
 
                 <TextView
                     android:id="@+id/numTextView"
@@ -55,75 +57,117 @@
                     android:gravity="center"
                     android:text="@{`` + travel.numPassengers}"
                     android:textSize="18sp"
-                    tools:ignore="MissingConstraints"
-                    tools:layout_editor_absoluteX="74dp"
-                    tools:layout_editor_absoluteY="8dp" />
+                    android:textStyle="bold"
+                    tools:ignore="MissingConstraints" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="LOCATIONS"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/firstLocTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@{company.getPlace(travel.travelLocation)}"
-                android:textSize="16sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
 
-            <Spinner
-                android:id="@+id/locationSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:entries="@{company.getPlaces(travel.destLocations)}"
-                android:textSize="16sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#C5E6DD"
+                        android:src="@drawable/ic_baseline_location_on_24" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/firstLocTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="2dp"
+                            android:background="#9FAEEFDC"
+                            android:padding="4dp"
+                            android:text="@{company.getPlace(travel.travelLocation)}"
+                            android:textColor="#137095"
+                            android:textSize="16sp" />
+
+                        <Spinner
+                            android:id="@+id/locationSpinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:background="#9FAEEFDC"
+                            android:entries="@{company.getPlaces(travel.destLocations)}"
+                            android:padding="4dp"
+                            android:textSize="16sp"
+                            android:theme="@style/spinnerTheme" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
         </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EEC1E1C6"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
-                <ImageView
+                <Button
                     android:id="@+id/phoneImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_width="@android:dimen/app_icon_size"
+                    android:layout_height="@android:dimen/app_icon_size"
+                    android:background="@drawable/ic_baseline_local_phone_24"
+                    android:minWidth="@android:dimen/app_icon_size"
                     android:padding="8dp"
-                    android:src="@drawable/ic_baseline_local_phone_24" />
+                    android:onClick="@{() -> company.phoneCall(travel.clientPhone)}"
+                    app:backgroundTint="#347837" />
 
-                <ImageView
+                <Button
                     android:id="@+id/emailImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_width="@android:dimen/app_icon_size"
+                    android:layout_height="@android:dimen/app_icon_size"
+                    android:background="@drawable/ic_baseline_alternate_email_24"
                     android:padding="8dp"
-                    android:src="@drawable/ic_baseline_alternate_email_24" />
+                    android:onClick="@{() -> company.sendEmail(travel.clientEmail)}"
+                    app:backgroundTint="#BD5B5B"
+                    app:iconTint="#FFFFFF" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/ic_baseline_send_24"
-                android:minWidth="@android:dimen/app_icon_size"
-                android:onClick="@{() -> company.accept(travel)}"
-                app:backgroundTint="#009688" />
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="8dp">
+
+                <Button
+                    android:id="@+id/sendButton"
+                    android:layout_width="@android:dimen/app_icon_size"
+                    android:layout_height="@android:dimen/app_icon_size"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ic_baseline_send_24"
+                    android:onClick="@{() -> company.accept(travel)}"
+                    android:padding="8dp"
+                    app:backgroundTint="#068075" />
+            </LinearLayout>
+
         </LinearLayout>
 
 

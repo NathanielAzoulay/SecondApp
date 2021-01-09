@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                             savePreferences();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("userEmail",user.getEmail());
+                            errorText.setText("");
                             startActivity(intent);
                         } else {
                             Log.e(TAG, "signIn: Failed!", task.getException());
