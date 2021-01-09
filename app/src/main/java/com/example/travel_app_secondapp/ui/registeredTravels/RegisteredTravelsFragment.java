@@ -80,33 +80,9 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered{/
     }
 
 
-    // TODO: logical business should be at least in viewModel
-    public void UpdateCompanyTravel() throws NullPointerException {
-        //get position from recyclerView
-        //get position from spinner
-        Travel travel = travelList.get(0);
-        String companyID = "??";
-        Iterator it = travel.getCompany().entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            pair.setValue(false);
-        }
-        travel.getCompany().put(companyID, true);
-        registeredTravelsViewModel.updateTravel(travel);
-    }
-
-    // TODO: logical business should be at least in viewModel
-    public void TravelAccepted() {
-        //get position from recyclerView
-        Travel travel = travelList.get(0);
-        travel.setRequestType(Travel.RequestType.accepted);
-        registeredTravelsViewModel.updateTravel(travel);
-    }
-
-
     @Override
     public void accept(String selectedItem, Travel travel) {
-        Toast.makeText(parentActivity.getBaseContext(),selectedItem , Toast.LENGTH_LONG).show();
+        Toast.makeText(parentActivity.getBaseContext(), selectedItem, Toast.LENGTH_LONG).show();
         travel.getCompany().clear();
         travel.getCompany().put(selectedItem, true);
         travel.setRequestType(Travel.RequestType.accepted);

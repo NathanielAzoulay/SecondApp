@@ -59,7 +59,7 @@ public class companyAdapter extends RecyclerView.Adapter<companyAdapter.viewHold
     }
 
     public interface ICompany {
-        void accept(Travel travel);
+        void send(Travel travel);
         void sendEmail(String emailAddress);
         void phoneCall(String phoneNumber);
         String getPlace(UserLocation location);

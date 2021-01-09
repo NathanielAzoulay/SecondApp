@@ -190,25 +190,11 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
                 //Toast.makeText(this, "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
             }
         }
-//        if (requestCode == 4){
-//                // If request is cancelled, the result arrays are empty.
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                    // permission was granted, yay! Do the phone call
-//
-//                } else {
-//
-//                    // permission denied, boo! Disable the
-//                    // functionality that depends on this permission.
-//                }
-//        }
     }
 
 
     @Override
     public String getPlace(UserLocation location) {
-
         Geocoder geocoder = new Geocoder(parentActivity.getBaseContext(), Locale.getDefault());
         List<Address> addresses = null;
         try {
@@ -216,8 +202,7 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             if (addresses.size() > 0) {
                 return addresses.get(0).getAddressLine(0);
             }
-
-            return "unknown place: \n ("+location.getLat()+" , "+location.getLon()+")";
+            return "unknown place: \n ("+location.getLat()+", "+location.getLon()+")";
         }
         catch(
                 IOException e)
@@ -246,10 +231,12 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
         companyTravelsViewModel.updateTravel(travel);
     }
 
-
     @Override
-    public void accept(Travel travel) {
-
+    public void send(Travel travel) {
+        if (travel.getCompany() == null)
+            travel.setCompany(new HashMap<>());
+        travel.getCompany().put(parentActivity.getUserEmail(), false);
+        companyTravelsViewModel.updateTravel(travel);
     }
 
     @Override
@@ -268,25 +255,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse("tel:"+phoneNumber));
         startActivity(intent);
-//        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
-//        // Here, thisActivity is the current activity
-//        if (ContextCompat.checkSelfPermission(parentActivity,
-//                Manifest.permission.CALL_PHONE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            ActivityCompat.requestPermissions(parentActivity,
-//                    new String[]{Manifest.permission.CALL_PHONE}, 4);
-//            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
-//            // app-defined int constant. The callback method gets the
-//            // result of the request.
-//        } else {
-//            //You already have permission
-//            try {
-//                startActivity(intent);
-//            } catch(SecurityException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
 
