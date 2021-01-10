@@ -5,23 +5,17 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import com.example.travel_app_secondapp.data.ITravelRepository;
 import com.example.travel_app_secondapp.data.TravelRepository;
 import com.example.travel_app_secondapp.entities.Travel;
-
 import java.util.List;
 
 public class HistoryTravelsViewModel extends AndroidViewModel {
 
-    private MutableLiveData<String> mText;
     ITravelRepository travelsRepository;
 
     public HistoryTravelsViewModel(Application application) {
         super(application);
-        mText = new MutableLiveData<>();
-        mText.setValue("This is history travels fragment");
         travelsRepository =  TravelRepository.getInstance(application);
     }
 
@@ -42,10 +36,4 @@ public class HistoryTravelsViewModel extends AndroidViewModel {
     {
         return travelsRepository.getIsSuccess();
     }
-
-    public LiveData<String> getText() {
-        return mText;
-    }
-
-
 }

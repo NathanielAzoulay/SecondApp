@@ -21,6 +21,7 @@ import com.example.travel_app_secondapp.adapters.registeredAdapter;
 import com.example.travel_app_secondapp.databinding.FragmentTravelsHistoryBinding;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.ui.MainActivity;
+import com.example.travel_app_secondapp.ui.TravelViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class HistoryTravelsFragment extends Fragment implements historyAdapter.IHistory {
 
     private final List<Travel> travelList = new ArrayList<>();
-    private HistoryTravelsViewModel historyTravelsViewModel;
+    private TravelViewModel historyTravelsViewModel;
     private String TAG = "HistoryTravelsFragment";
     FragmentTravelsHistoryBinding historyBinding;
     MainActivity parentActivity;
@@ -39,7 +40,7 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         historyTravelsViewModel =
-                new ViewModelProvider(this).get(HistoryTravelsViewModel.class);
+                new ViewModelProvider(this).get(TravelViewModel.class);
 
         historyBinding = FragmentTravelsHistoryBinding.inflate(inflater,container,false);
         historyAdapter adapter = new historyAdapter(travelList,this);

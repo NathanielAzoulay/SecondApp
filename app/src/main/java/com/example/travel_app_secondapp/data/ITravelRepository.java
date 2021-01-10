@@ -19,7 +19,7 @@ public interface ITravelRepository {
     void updateTravel(Travel travel);
     void removeTravel(Travel travel);
 
-    LiveData<List<Travel>> getAllTravels(boolean fireBase);
+    LiveData<List<Travel>> getAllTravels();
     LiveData<List<Travel>> getAllRegisteredTravels(String userEmail);
     LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double max);
     LiveData<List<Travel>> getAllHistoryTravels();

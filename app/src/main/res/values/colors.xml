@@ -19,7 +19,7 @@
     <color name="paid">#FFEB3B</color>
 
     <color name="button_accept">#DD7841</color>
-    <color name="button_run">#EAB122</color>
+    <color name="button_run">#DC7B3A</color>
     <color name="button_close">#D35A3B</color>
     <color name="button_confirm">#26D59E</color>
 
@@ -35,7 +35,7 @@
         <item>@color/button_accept</item>
         <item>@color/button_run</item>
         <item>@color/button_close</item>
-        <item>@color/gray</item>
+        <item>@color/light_gray</item>
         <item>@color/button_confirm</item>
     </integer-array>
 

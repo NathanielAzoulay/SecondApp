@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.example.travel_app_secondapp.databinding.FragmentTravelsRegisteredBin
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 import com.example.travel_app_secondapp.ui.MainActivity;
+import com.example.travel_app_secondapp.ui.TravelViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.io.IOException;
@@ -51,39 +53,35 @@ import static java.lang.Thread.sleep;
 public class CompanyTravelsFragment extends Fragment  implements companyAdapter.ICompany {
 
     private final List<Travel> travelList = new ArrayList<>();
-    private CompanyTravelsViewModel companyTravelsViewModel;
+    private TravelViewModel companyTravelsViewModel;
     private String TAG = "CompanyTravelsFragment";
-
     double curLatitude = 0, curLongitude = 0;
-    String userEmail;
     // Acquire a reference to the system Location Manager
     LocationManager locationManager;
     // Define a listener that responds to location updates
     LocationListener locationListener;
     MainActivity parentActivity;
+    String companyName;
     UserLocation userLocation;
     private final double MAX_DIST = 8000.0;
-
+    double max_distance = 0;
     FragmentTravelsCompanyBinding companyBinding;
-    private FusedLocationProviderClient fusedLocationClient;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         parentActivity = (MainActivity) getActivity();
+        // takes only the name of the email address (example: monalisa@gmail.com -> monalisa)
+        companyName = parentActivity.getUserEmail().replaceAll("@[a-z]+\\.+[a-z]+", "");
         locationManager = (LocationManager) parentActivity.getSystemService(Context.LOCATION_SERVICE);
         userLocation = new UserLocation(curLatitude, curLongitude);
 
-        userEmail = parentActivity.getUserEmail();
-        companyTravelsViewModel = new ViewModelProvider(this).get(CompanyTravelsViewModel.class);
-        //View root = inflater.inflate(R.layout.fragment_travels_company, container, false);
-
+        companyTravelsViewModel = new ViewModelProvider(this).get(TravelViewModel.class);
 
         companyBinding = FragmentTravelsCompanyBinding.inflate(inflater,container,false);
         companyAdapter adapter = new companyAdapter(travelList,this);
         companyBinding.companyRecyclerView.setAdapter(adapter);
 
-        companyTravelsViewModel.getAllCompanyTravels(userLocation, MAX_DIST).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
+        companyTravelsViewModel.getAllCompanyTravels(userLocation, max_distance).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
                 travelList.clear();
@@ -113,6 +111,8 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
+                companyBinding.progressbar.setVisibility(View.GONE);
+                max_distance = MAX_DIST;
                 // TODO: check if last location different enough from the current (example: 100 meters)
                 // Called when a new location is found by the network location provider.
                 userLocation.setLat(location.getLatitude());
@@ -135,7 +135,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             }
         };
 
-
         getLocation();
 
         return companyBinding.getRoot();
@@ -149,6 +148,7 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20*1000, 0, locationListener);
+            companyBinding.progressbar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -187,30 +187,10 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     }
 
 
-
-    // TODO: logical business should be at least in viewModel
-    public void AddCompanyToTravel(){
-        //get position from recyclerView
-        Travel travel = travelList.get(0); // ..get(position)
-        HashMap<String, Boolean> company;
-        if(travel.getCompany() == null) {
-            company = new HashMap<>();
-            travel.setCompany(company);
-        }
-        else{
-            company = travel.getCompany();
-        }
-        company.put(userEmail, false);
-        travel.setCompany(company);
-        companyTravelsViewModel.updateTravel(travel);
-    }
-
     @Override
     public void send(Travel travel) {
         if (travel.getCompany() == null)
             travel.setCompany(new HashMap<>());
-        // '/', '.', '#', '$', '[', ']'
-        String companyName = parentActivity.getUserEmail().replaceAll("@[a-z]+\\.+[a-z]+", "" );
         travel.getCompany().put(companyName, false);
         companyTravelsViewModel.updateTravel(travel);
     }
@@ -246,7 +226,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     @Override
     public boolean isSendButtonEnabled(Travel travel){
         if (travel.getCompany() != null){
-            String companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
             return (travel.getCompany().get(companyName) == null);
         }
         return (travel.getRequestType() == Travel.RequestType.sent);

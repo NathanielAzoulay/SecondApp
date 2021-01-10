@@ -1,23 +1,17 @@
 package com.example.travel_app_secondapp.data;
 
 import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
-import com.example.travel_app_secondapp.ui.companyTravels.CompanyTravelsViewModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Thread.sleep;
-
 /**
  * The repository responsibilities are:
- *      to
- *      to..
+ *      to make the interfacing with the data sources with abstraction
+ *      to save the history of the database which brought from firebase to a local database
  *      to filter list which it gets from the firebase database for each fragment
  */
 public class TravelRepository implements ITravelRepository {
@@ -31,8 +25,8 @@ public class TravelRepository implements ITravelRepository {
     private final List<Travel> travelsCompany = new ArrayList<>();
     private final List<Travel> travelsHistory = new ArrayList<>();
 
-    UserLocation userLocation;
-    double maxDist = 20000;
+    UserLocation userLoc;
+    double maxDist;
 
     String userEmail = "none";
     private static TravelRepository instance;
@@ -48,9 +42,9 @@ public class TravelRepository implements ITravelRepository {
 
     private TravelRepository(Application application) {
         travelDataSource = TravelFirebaseDataSource.getInstance();
-        // TODO: singleton
         historyDataSource = new HistoryDataSource(application.getApplicationContext());
-        userLocation = new UserLocation(0,0);
+        userLoc = new UserLocation(0,0);
+        maxDist = 0;
         // here (in the constructor) we implements the notifyListener of the data source.
         ITravelDataSource.NotifyToTravelListListener notifyToTravelListListener = new ITravelDataSource.NotifyToTravelListListener() {
             @Override
@@ -84,20 +78,38 @@ public class TravelRepository implements ITravelRepository {
     }
 
 
+    /**
+     * a function that gives all the travels from the data source
+     * @return liveData of the list
+     */
     @Override
-    public LiveData<List<Travel>> getAllTravels(boolean fireBase) {
+    public LiveData<List<Travel>> getAllTravels() {
         return mutableLiveData;
     }
 
+    /**
+     * receives all the travels which belong to the registered section, it means:
+     * all travels made by the user, which are relevant to their date
+     * @return liveData of the filtered list of the travels
+     */
     public LiveData<List<Travel>> getAllRegisteredTravels(String clientEmail){
+        // repository need to know the new values since it use the filtering in it's constructor,
+        // when the notify listener activates.
         userEmail = clientEmail;
         if (travelList != null)
             registeredMutableLiveData.setValue(filterRegisteredTravels());
         return registeredMutableLiveData;
     }
 
-    public LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double maxDist){
-        this.userLocation = userLocation;
+    /**
+     * receives all the travels which belong to the company section, it means:
+     * new travels in the area, travels that accepted for this company offer.
+     * @return liveData of the filtered list of the travels
+     */
+    public LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLoc, double maxDist){
+        // repository need to know the new values since it use the filtering in it's constructor,
+        // when the notify listener activates.
+        this.userLoc = userLoc;
         this.maxDist = maxDist;
         if (travelList != null) {
             companyMutableLiveData.setValue(filterCompanyTravels());
@@ -105,6 +117,10 @@ public class TravelRepository implements ITravelRepository {
         return companyMutableLiveData;
     }
 
+    /**
+     * receives all the travels which belong to the history section, it means: expired, closed, paid..
+     * @return liveData of the filtered list of the travels
+     */
     public LiveData<List<Travel>> getAllHistoryTravels(){
         if (travelList != null) {
             historyDataSource.clearTable();
@@ -126,45 +142,48 @@ public class TravelRepository implements ITravelRepository {
         travelsRegistered.clear();
         travelList = travelDataSource.getAllTravels();
         for(Travel travel : travelList){
-            if (travel.getClientEmail().equals(userEmail))
-                    //&& travel.getRequestType() == Travel.RequestType.sent)
+            if (travel.getClientEmail().equals(userEmail) && isDateRelevant(travel) && travel.getRequestType().getCode() < 3)
                 travelsRegistered.add(travel);
         }
         return travelsRegistered;
     }
 
     /**
-     * get all travel requests which are close to a known location, and has status "sent"
+     * get all travel requests which are close to a known location, and has status "sent".
+     * or, those requests which has been already accepted this company's offer
      * @return the list which filtered by close range and status of "sent"
      */
     public List<Travel> filterCompanyTravels(){
         travelsCompany.clear();
         travelList = travelDataSource.getAllTravels();
         for(Travel travel : travelList){
-            UserLocation travelLoc = travel.getTravelLocation(); // check maybe his source is in our area
-            if (calculateDistance(userLocation.getLat(),userLocation.getLon(),travelLoc.getLat(),travelLoc.getLon()) < maxDist &&
-                     travel.getRequestType() == Travel.RequestType.sent
-                || isCompanyAccepted(travel))
+            UserLocation travelLoc = travel.getTravelLocation(); // check maybe his source is in our area and his request just sent
+            if (((calculateDistance(userLoc.getLat(),userLoc.getLon(),travelLoc.getLat(),travelLoc.getLon())
+                    < maxDist && travel.getRequestType() == Travel.RequestType.sent )
+                || isCompanyAccepted(travel)) // or maybe it's a request which already accepted for our company
+
+                    && isDateRelevant(travel)) // all below has to be relevant with it's date
             {
                 travelsCompany.add(travel);
             }
-
-
         }
         return travelsCompany;
     }
 
-    private boolean isCompanyAccepted(Travel travel) {
-        if (travel.getCompany() != null){
-            String companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
-            if(travel.getCompany().get(companyName) != null)
-                return travel.getCompany().get(companyName);
-        }
-        return false;
-    }
 
-
+    /**
+     * average radius of earth
+     */
     public final static double AVERAGE_RADIUS_OF_EARTH = 6371;
+
+    /**
+     * a function that calculates the distance between two locations
+     * @param userLat location 1 latitude
+     * @param userLng location 1 longitude
+     * @param venueLat location 2 latitude
+     * @param venueLng location 2 longitude
+     * @return the distance
+     */
     public float calculateDistance(double userLat, double userLng, double venueLat, double venueLng) {
 
         double latDistance = Math.toRadians(userLat - venueLat);
@@ -194,6 +213,30 @@ public class TravelRepository implements ITravelRepository {
                 travelsHistory.add(travel);
         }
         return travelsHistory;
+    }
+
+    /**
+     * function that receive a travel and gives an answer if is expired
+     * @param travel instance of a travel
+     * @return boolean true/false
+     */
+    private boolean isDateRelevant(Travel travel){
+            return (travel.getCreateDate().getTime() < travel.getTravelDate().getTime());
+    }
+
+    /**
+     * function that receive a travel and gives an answer if the company has accepted by the traveler
+     * @param travel instance of a travel
+     * @return boolean true/false
+     */
+    private boolean isCompanyAccepted(Travel travel) {
+        if (travel.getCompany() != null){
+            // takes only the name of the email address (example: monalisa@gmail.com -> monalisa)
+            String companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
+            if(travel.getCompany().get(companyName) != null)
+                return travel.getCompany().get(companyName);
+        }
+        return false;
     }
 
 }
