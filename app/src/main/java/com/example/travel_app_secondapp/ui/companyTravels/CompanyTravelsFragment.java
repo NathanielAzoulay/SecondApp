@@ -115,7 +115,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             public void onLocationChanged(Location location) {
                 // TODO: check if last location different enough from the current (example: 100 meters)
                 // Called when a new location is found by the network location provider.
-                Toast.makeText(parentActivity.getBaseContext(), Double.toString(location.getLatitude()) + " : " + Double.toString(location.getLongitude()), Toast.LENGTH_LONG).show();
                 userLocation.setLat(location.getLatitude());
                 userLocation.setLon(location.getLongitude());
                 // TODO:loader.visibility.GONE or something like that...
@@ -138,16 +137,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
 
 
         getLocation();
-//        Thread timer = new Thread() {
-//            public void run(){
-//                try {
-//                    sleep(5000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-//        timer.start();
 
         return companyBinding.getRoot();
     }
@@ -160,21 +149,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20*1000, 0, locationListener);
-
-                // TODO: for getting first location when creating the fragment
-//            fusedLocationClient = LocationServices.getFusedLocationProviderClient(parentActivity);
-//            fusedLocationClient.getLastLocation()
-//                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            // Got last known location. In some rare situations this can be null.
-//                            if (location != null) {
-//                                // Logic to handle location object
-//                            }
-//                        }
-//                    });
-            //textView.setText(getPlace(new Location()));
-
         }
     }
 
@@ -235,7 +209,9 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     public void send(Travel travel) {
         if (travel.getCompany() == null)
             travel.setCompany(new HashMap<>());
-        travel.getCompany().put(parentActivity.getUserEmail(), false);
+        // '/', '.', '#', '$', '[', ']'
+        String companyName = parentActivity.getUserEmail().replaceAll("@[a-z]+\\.+[a-z]+", "" );
+        travel.getCompany().put(companyName, false);
         companyTravelsViewModel.updateTravel(travel);
     }
 
@@ -265,6 +241,15 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             places.add(getPlace(location));
         }
         return places;
+    }
+
+    @Override
+    public boolean isSendButtonEnabled(Travel travel){
+        if (travel.getCompany() != null){
+            String companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
+            return (travel.getCompany().get(companyName) == null);
+        }
+        return (travel.getRequestType() == Travel.RequestType.sent);
     }
 
 }

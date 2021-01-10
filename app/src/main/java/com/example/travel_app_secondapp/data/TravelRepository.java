@@ -27,9 +27,12 @@ public class TravelRepository implements ITravelRepository {
     private MutableLiveData<List<Travel>> registeredMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<List<Travel>> companyMutableLiveData = new MutableLiveData<>();
     private List<Travel> travelList;
-    private List<Travel> travelsRegistered = new ArrayList<>();
-    private List<Travel> travelsCompany = new ArrayList<>();
+    private final List<Travel> travelsRegistered = new ArrayList<>();
+    private final List<Travel> travelsCompany = new ArrayList<>();
+    private final List<Travel> travelsHistory = new ArrayList<>();
 
+    UserLocation userLocation;
+    double maxDist = 20000;
 
     String userEmail = "none";
     private static TravelRepository instance;
@@ -47,16 +50,17 @@ public class TravelRepository implements ITravelRepository {
         travelDataSource = TravelFirebaseDataSource.getInstance();
         // TODO: singleton
         historyDataSource = new HistoryDataSource(application.getApplicationContext());
+        userLocation = new UserLocation(0,0);
         // here (in the constructor) we implements the notifyListener of the data source.
         ITravelDataSource.NotifyToTravelListListener notifyToTravelListListener = new ITravelDataSource.NotifyToTravelListListener() {
             @Override
             public void onTravelsChanged() {
                 travelList = travelDataSource.getAllTravels();
                 registeredMutableLiveData.setValue(filterRegisteredTravels());
+                companyMutableLiveData.setValue(filterCompanyTravels());
                 mutableLiveData.setValue(travelList);
-                //TODO: filter requests: closed
                 historyDataSource.clearTable();
-                historyDataSource.addTravel(travelList);
+                historyDataSource.addTravel(filterHistoryTravels(travelList));
             }
         };
         // here we give the instance of the listener to DataSource for his use
@@ -93,13 +97,19 @@ public class TravelRepository implements ITravelRepository {
     }
 
     public LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double maxDist){
+        this.userLocation = userLocation;
+        this.maxDist = maxDist;
         if (travelList != null) {
-            companyMutableLiveData.setValue(filterCompanyTravels(userLocation, maxDist));
+            companyMutableLiveData.setValue(filterCompanyTravels());
         }
         return companyMutableLiveData;
     }
 
     public LiveData<List<Travel>> getAllHistoryTravels(){
+        if (travelList != null) {
+            historyDataSource.clearTable();
+            historyDataSource.addTravel(filterHistoryTravels(travelList));
+        }
         return historyDataSource.getTravels();
     }
 
@@ -124,21 +134,33 @@ public class TravelRepository implements ITravelRepository {
     }
 
     /**
-     * get all travel requests which which close to a known location, and has status "sent"
+     * get all travel requests which are close to a known location, and has status "sent"
      * @return the list which filtered by close range and status of "sent"
      */
-    public List<Travel> filterCompanyTravels(UserLocation userLocation, double maxDist){
+    public List<Travel> filterCompanyTravels(){
         travelsCompany.clear();
         travelList = travelDataSource.getAllTravels();
         for(Travel travel : travelList){
             UserLocation travelLoc = travel.getTravelLocation(); // check maybe his source is in our area
-            if (calculateDistance(userLocation.getLat(),userLocation.getLon(),travelLoc.getLat(),travelLoc.getLon()) < maxDist
-                    && travel.getRequestType() == Travel.RequestType.sent)
+            if (calculateDistance(userLocation.getLat(),userLocation.getLon(),travelLoc.getLat(),travelLoc.getLon()) < maxDist &&
+                     travel.getRequestType() == Travel.RequestType.sent
+                || isCompanyAccepted(travel))
             {
                 travelsCompany.add(travel);
             }
+
+
         }
         return travelsCompany;
+    }
+
+    private boolean isCompanyAccepted(Travel travel) {
+        if (travel.getCompany() != null){
+            String companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
+            if(travel.getCompany().get(companyName) != null)
+                return travel.getCompany().get(companyName);
+        }
+        return false;
     }
 
 
@@ -158,6 +180,20 @@ public class TravelRepository implements ITravelRepository {
 
         return (float) (Math.round(AVERAGE_RADIUS_OF_EARTH * c));
 
+    }
+
+    /**
+     * get all travel requests that their "requestType" is closed.
+     * @return the list which filtered by status of "closed"
+     */
+    private List<Travel> filterHistoryTravels(List<Travel> travelList) {
+        travelsHistory.clear();
+        for (Travel travel : travelList){
+            if (travel.getRequestType() == Travel.RequestType.close ||
+                    travel.getRequestType() == Travel.RequestType.paid)
+                travelsHistory.add(travel);
+        }
+        return travelsHistory;
     }
 
 }

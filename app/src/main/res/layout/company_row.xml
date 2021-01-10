@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.example.travel_app_secondapp.entities.Travel.DateConverter" />
         <variable
             name="travel"
             type="com.example.travel_app_secondapp.entities.Travel" />
@@ -13,53 +14,165 @@
             type="com.example.travel_app_secondapp.adapters.companyAdapter.ICompany" />
     </data>
 
-
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="#9BD8A5"
-        android:orientation="horizontal">
+        android:layout_margin="5dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:orientation="vertical"
-            >
+
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:background="@{@intArray/RequestTypeColor[travel.requestType.code]}"
                 android:padding="4dp">
+                <TextView
+                    android:id="@+id/typeTextView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{@stringArray/RequestTypeName[travel.requestType.code]}"
+                    android:textSize="13sp"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/nameTextView"
-                    android:layout_width="match_parent"
+                    android:id="@+id/createdTextView"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:text="@{DateConverter.dateToTimestamp(travel.createDate)}"
+                    android:textSize="13sp"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@{`` + travel.clientName}"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:ignore="MissingConstraints" />
-
-                <TextView
-                    android:id="@+id/numTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="@{`` + travel.numPassengers}"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:ignore="MissingConstraints" />
+                    android:gravity="end"
+                    android:textStyle="bold"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:orientation="vertical"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:text="Name: "
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/nameTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@{`` + travel.clientName}"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:text="Passengers: "
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:ignore="MissingConstraints" />
+
+                        <TextView
+                            android:id="@+id/numTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@{`` + travel.numPassengers}"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="4dp"
+                    android:layout_gravity="center">
+                    <View
+                        android:layout_width="1.5dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@color/light_gray" />
+
+                    <ImageView
+                        android:id="@+id/phoneImageView"
+                        android:layout_width="@android:dimen/app_icon_size"
+                        android:layout_height="@android:dimen/app_icon_size"
+                        android:minWidth="@android:dimen/app_icon_size"
+                        android:onClick="@{() -> company.phoneCall(travel.clientPhone)}"
+                        android:padding="4dp"
+                        android:src="@drawable/ic_baseline_local_phone_24" />
+
+                    <ImageView
+                        android:id="@+id/emailImageView"
+                        android:layout_width="@android:dimen/app_icon_size"
+                        android:layout_height="@android:dimen/app_icon_size"
+                        android:src="@drawable/ic_baseline_alternate_email_24"
+                        android:padding="4dp"
+                        android:onClick="@{() -> company.sendEmail(travel.clientEmail)}"
+                        app:backgroundTint="#BD5B5B"
+                        app:iconTint="#FFFFFF" />
+
+                    <Button
+                        android:id="@+id/sendButton"
+                        android:layout_width="@android:dimen/app_icon_size"
+                        android:layout_height="@android:dimen/app_icon_size"
+                        android:layout_gravity="center"
+                        android:background="@drawable/ic_baseline_send_24"
+                        android:onClick="@{() -> company.send(travel)}"
+                        android:padding="34dp"
+                        android:enabled="@{company.isSendButtonEnabled(travel)}"
+                        android:backgroundTint="@{company.isSendButtonEnabled(travel)? @color/button_enabled_company : @color/gray }" />
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.5dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@color/light_gray" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,9 +185,8 @@
                     android:padding="4dp">
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="37dp"
                         android:layout_height="match_parent"
-                        android:background="#C5E6DD"
                         android:src="@drawable/ic_baseline_location_on_24" />
 
                     <LinearLayout
@@ -87,11 +199,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:layout_marginLeft="4dp"
                             android:layout_marginBottom="2dp"
-                            android:background="#9FAEEFDC"
                             android:padding="4dp"
                             android:text="@{company.getPlace(travel.travelLocation)}"
-                            android:textColor="#137095"
                             android:textSize="16sp" />
 
                         <Spinner
@@ -99,7 +210,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:background="#9FAEEFDC"
                             android:entries="@{company.getPlaces(travel.destLocations)}"
                             android:padding="4dp"
                             android:textSize="16sp"
@@ -108,64 +218,8 @@
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="#EEC1E1C6"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <Button
-                    android:id="@+id/phoneImageView"
-                    android:layout_width="@android:dimen/app_icon_size"
-                    android:layout_height="@android:dimen/app_icon_size"
-                    android:background="@drawable/ic_baseline_local_phone_24"
-                    android:minWidth="@android:dimen/app_icon_size"
-                    android:padding="8dp"
-                    android:onClick="@{() -> company.phoneCall(travel.clientPhone)}"
-                    app:backgroundTint="#347837" />
-
-                <Button
-                    android:id="@+id/emailImageView"
-                    android:layout_width="@android:dimen/app_icon_size"
-                    android:layout_height="@android:dimen/app_icon_size"
-                    android:background="@drawable/ic_baseline_alternate_email_24"
-                    android:padding="8dp"
-                    android:onClick="@{() -> company.sendEmail(travel.clientEmail)}"
-                    app:backgroundTint="#BD5B5B"
-                    app:iconTint="#FFFFFF" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:padding="8dp">
-
-                <Button
-                    android:id="@+id/sendButton"
-                    android:layout_width="@android:dimen/app_icon_size"
-                    android:layout_height="@android:dimen/app_icon_size"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ic_baseline_send_24"
-                    android:onClick="@{() -> company.send(travel)}"
-                    android:padding="8dp"
-                    app:backgroundTint="#068075" />
-            </LinearLayout>
-
-        </LinearLayout>
-
-
-    </LinearLayout>
 
 </layout>

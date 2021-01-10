@@ -1,5 +1,7 @@
 package com.example.travel_app_secondapp.ui.historyTravels;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +16,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.travel_app_secondapp.R;
+import com.example.travel_app_secondapp.adapters.historyAdapter;
+import com.example.travel_app_secondapp.adapters.registeredAdapter;
+import com.example.travel_app_secondapp.databinding.FragmentTravelsHistoryBinding;
 import com.example.travel_app_secondapp.entities.Travel;
+import com.example.travel_app_secondapp.ui.MainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,29 +28,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class HistoryTravelsFragment extends Fragment {
+public class HistoryTravelsFragment extends Fragment implements historyAdapter.IHistory {
 
     private final List<Travel> travelList = new ArrayList<>();
     private HistoryTravelsViewModel historyTravelsViewModel;
     private String TAG = "HistoryTravelsFragment";
+    FragmentTravelsHistoryBinding historyBinding;
+    MainActivity parentActivity;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         historyTravelsViewModel =
                 new ViewModelProvider(this).get(HistoryTravelsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_travels_history, container, false);
-        final TextView textView = root.findViewById(R.id.text_slideshow);
-        historyTravelsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
+
+        historyBinding = FragmentTravelsHistoryBinding.inflate(inflater,container,false);
+        historyAdapter adapter = new historyAdapter(travelList,this);
+        historyBinding.registeredRecyclerView.setAdapter(adapter);
+
+        parentActivity = (MainActivity) getActivity();
 
         historyTravelsViewModel.getAllHistoryTravels().observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
                 travelList.clear();
                 travelList.addAll(travels);
+                adapter.notifyDataSetChanged();
                 for (Travel tmp : travels) {
                     Log.e(TAG, tmp.getClientName() + ":  ");
                     Log.e(TAG, tmp.getTravelId() );
@@ -63,7 +71,25 @@ public class HistoryTravelsFragment extends Fragment {
                     }
                 }
             }});
-
-        return root;
+        return historyBinding.getRoot();
     }
+
+    @Override
+    public void send(Travel travel) {
+        travel.setRequestType(Travel.RequestType.paid);
+        historyTravelsViewModel.updateTravel(travel);
+    }
+
+    @Override
+    public void sendEmail(String emailAddress){
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Demand a commission in exchange for using \"Travel App\"");
+        intent.putExtra(Intent.EXTRA_TEXT, "Hello, thanks for using our application \"Travel App\"!\n we notify you that you need to pay the commission for using our application.");
+        if (intent.resolveActivity(parentActivity.getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }

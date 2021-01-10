@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Entity (tableName = "travels")
 public class Travel {
@@ -136,7 +137,7 @@ public class Travel {
 	
 	
 	public enum RequestType {
-        sent(0), accepted(1), run(2), close(3);
+        sent(0), accepted(1), run(2), close(3), paid(4);
         private final Integer code;
         RequestType(Integer value) {
             this.code = value;
@@ -252,21 +253,14 @@ public class Travel {
     @Exclude
     @Ignore
     public List<String> getCompanyKeys(){
-//	    if(company!=null){
-//            List<String> stringList = new ArrayList<String>( company.keySet());
-//            String firstItem = "";
-//            for (String item : stringList){
-//                if (company.get(item) == true){
-//                    firstItem = item;
-//                    break;
-//                }
-//            }
-//            stringList.remove(firstItem);
-//            stringList.add(firstItem);
-//            return stringList;
-//        }
-//	    return null;
         return company!=null? new ArrayList<String>( company.keySet()) : null;
+    }
+
+    @Exclude
+    @Ignore
+    public long getTotalDays(){
+	    long diff = arrivalDate.getTime() - travelDate.getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
 }

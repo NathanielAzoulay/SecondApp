@@ -82,11 +82,29 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered{/
 
     @Override
     public void accept(String selectedItem, Travel travel) {
-        Toast.makeText(parentActivity.getBaseContext(), selectedItem, Toast.LENGTH_LONG).show();
-        travel.getCompany().clear();
-        travel.getCompany().put(selectedItem, true);
-        travel.setRequestType(Travel.RequestType.accepted);
-        registeredTravelsViewModel.updateTravel(travel);
+        switch (travel.getRequestType().getCode()){
+            case 0:
+                Toast.makeText(parentActivity.getBaseContext(), selectedItem, Toast.LENGTH_LONG).show();
+                travel.getCompany().clear();
+                travel.getCompany().put(selectedItem, true);
+                travel.setRequestType(Travel.RequestType.accepted);
+                registeredTravelsViewModel.updateTravel(travel);
+                break;
+            case 1:
+                travel.setRequestType(Travel.RequestType.run);
+                registeredTravelsViewModel.updateTravel(travel);
+                break;
+            case 2:
+                travel.setRequestType(Travel.RequestType.close);
+                registeredTravelsViewModel.updateTravel(travel);
+                break;
+            default:
+                break;
+        }
+
+
+
+
     }
 
 }

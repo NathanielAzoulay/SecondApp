@@ -18,7 +18,7 @@ public class HistoryDataSource implements IHistoryDataSource{
     }
 
     public LiveData<List<Travel>> getTravels(){
-        return travelDao.getAllClosed();
+        return travelDao.getAll();
     }
 
     public LiveData<Travel> getTravel(String id){

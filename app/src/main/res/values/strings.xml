@@ -13,4 +13,21 @@
 
     <string name="email_not_valid">Email not valid</string>
     <string name="password_not_valid">Password too short, should be 6 characters at least</string>
+
+    <string-array name="RequestTypeName">
+        <item>sent</item>
+        <item>accepted</item>
+        <item>run</item>
+        <item>closed</item>
+        <item>paid</item>
+    </string-array>
+
+    <string-array name="RequestTypeButton">
+        <item>accept</item>
+        <item>run</item>
+        <item>close</item>
+        <item>closed</item>
+        <item>error-paid</item>
+    </string-array>
+
 </resources>

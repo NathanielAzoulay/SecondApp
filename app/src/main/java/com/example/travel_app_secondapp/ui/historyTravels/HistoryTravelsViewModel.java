@@ -25,11 +25,16 @@ public class HistoryTravelsViewModel extends AndroidViewModel {
         travelsRepository =  TravelRepository.getInstance(application);
     }
 
+    void updateTravel(Travel travel)
+    {
+        travelsRepository.updateTravel(travel);
+    }
 
     void removeTravel(Travel travel)
     {
         travelsRepository.removeTravel(travel);
     }
+    
     LiveData<List<Travel>> getAllHistoryTravels() {
         return (LiveData<List<Travel>>)travelsRepository.getAllHistoryTravels();
     }
