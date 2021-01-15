@@ -8,20 +8,20 @@ import com.example.travel_app_secondapp.entities.Travel;
 
 import java.util.List;
 
-public class HistoryDataSource implements IHistoryDataSource{
+public class HistoryDataSource implements IHistoryDataSource {
     private TravelDao travelDao;
 
-    public HistoryDataSource(Context context){
-        RoomDataSource database= RoomDataSource.getInstance(context);
-        travelDao =database.getTravelDao();
+    public HistoryDataSource(Context context) {
+        RoomDataSource database = RoomDataSource.getInstance(context);
+        travelDao = database.getTravelDao();
         travelDao.clear(); // cause crash
     }
 
-    public LiveData<List<Travel>> getTravels(){
+    public LiveData<List<Travel>> getTravels() {
         return travelDao.getAll();
     }
 
-    public LiveData<Travel> getTravel(String id){
+    public LiveData<Travel> getTravel(String id) {
         return travelDao.get(id);
     }
 
@@ -37,11 +37,13 @@ public class HistoryDataSource implements IHistoryDataSource{
         travelDao.update(p);
     }
 
-    public void deleteTravel(Travel p){
+    public void deleteTravel(Travel p) {
         travelDao.delete(p);
     }
 
-    public void clearTable(){travelDao.clear();}
+    public void clearTable() {
+        travelDao.clear();
+    }
 
 
 }

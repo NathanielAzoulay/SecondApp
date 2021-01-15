@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="loginViewModel"
             type="com.example.travel_app_secondapp.ui.LoginViewModel" />
@@ -30,9 +31,8 @@
                 android:hint="Client Email Address"
                 android:inputType="textEmailAddress"
                 android:text="@={loginViewModel.form.email}"
-                app:error = "@{loginViewModel.form.emailError}"
-                app:ValidationOnFocus="@{loginViewModel.form::isEmailValid}"
-                />
+                app:error="@{loginViewModel.form.emailError}"
+                app:ValidationOnFocus="@{loginViewModel.form::isEmailValid}" />
 
             <EditText
                 android:id="@+id/IdPassword"
@@ -51,6 +51,7 @@
                 android:textColor="#FF0000">
 
             </TextView>
+
             <LinearLayout
                 android:id="@+id/sign_in_up_buttons"
                 android:layout_width="fill_parent"
@@ -69,7 +70,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="signInOnClick"/>
+                    android:onClick="signInOnClick" />
 
                 <Button
                     android:id="@+id/btn_email_sign_up"
@@ -80,7 +81,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="signUpOnClick"/>
+                    android:onClick="signUpOnClick" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,7 +102,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="verifyEmailOnClick"/>
+                    android:onClick="verifyEmailOnClick" />
 
                 <Button
                     android:id="@+id/btn_password_reset"
@@ -112,7 +113,7 @@
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:enabled="@{loginViewModel.form.ok}"
-                    android:onClick="resetPasswordOnClick"/>
+                    android:onClick="resetPasswordOnClick" />
 
 
             </LinearLayout>

@@ -33,13 +33,14 @@ import java.util.List;
 import java.util.Map;
 
 
-public class RegisteredTravelsFragment extends Fragment implements IRegistered{//, AdapterView.OnItemSelectedListener {
+public class RegisteredTravelsFragment extends Fragment implements IRegistered {//, AdapterView.OnItemSelectedListener {
 
     private final List<Travel> travelList = new ArrayList<>();
     private TravelViewModel registeredTravelsViewModel;
     private String TAG = "RegisteredTravelsFragment";
     private MainActivity parentActivity;
     FragmentTravelsRegisteredBinding registeredBinding;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // # parent activity
@@ -47,31 +48,28 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered{/
         // # view model
         registeredTravelsViewModel = new ViewModelProvider(this).get(TravelViewModel.class);
         // # data binding the fragment with the adapter and it's recyclerview
-        registeredBinding = FragmentTravelsRegisteredBinding.inflate(inflater,container,false);
-        registeredAdapter adapter = new registeredAdapter(travelList,this);
+        registeredBinding = FragmentTravelsRegisteredBinding.inflate(inflater, container, false);
+        registeredAdapter adapter = new registeredAdapter(travelList, this);
         registeredBinding.registeredRecyclerView.setAdapter(adapter);
         // # implementation for onChanged - happen every time there is an update to the firebase
-        registeredTravelsViewModel.getAllRegisteredTravels(parentActivity.getUserEmail()).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
-            @Override
-            public void onChanged(List<Travel> travels) {
-                travelList.clear();
-                travelList.addAll(travels);
-                adapter.notifyDataSetChanged();
-                // just for show in logcat
-                for (Travel tmp : travels) {
-                    Log.e(TAG, tmp.getClientName() + ":  ");
-                    Log.e(TAG, tmp.getTravelId());
-                    Log.e(TAG, tmp.getClientPhone());
-                    Log.e(TAG, tmp.getRequestType().toString());
-                    Log.e(TAG, tmp.getArrivalDate() + "\n");
-                    //https://www.callicoder.com/java-hashmap/
-                    //HashMap is a hash table based implementation of Java’s Map interface
-                    HashMap<String, Boolean> company = tmp.getCompany();
-                    if (company != null) {
-                        for (Map.Entry<String, Boolean> stringBooleanEntry : tmp.getCompany().entrySet()) {
-                            Map.Entry pair = (Map.Entry) stringBooleanEntry;
-                            Log.e(TAG, "HashMap:  " + pair.getKey() + " = " + pair.getValue());
-                        }
+        registeredTravelsViewModel.getAllRegisteredTravels(parentActivity.getUserEmail()).observe(getViewLifecycleOwner(), travels -> {
+            travelList.clear();
+            travelList.addAll(travels);
+            adapter.notifyDataSetChanged();
+            // just for show in logcat
+            for (Travel tmp : travels) {
+                Log.e(TAG, tmp.getClientName() + ":  ");
+                Log.e(TAG, tmp.getTravelId());
+                Log.e(TAG, tmp.getClientPhone());
+                Log.e(TAG, tmp.getRequestType().toString());
+                Log.e(TAG, tmp.getArrivalDate() + "\n");
+                //https://www.callicoder.com/java-hashmap/
+                //HashMap is a hash table based implementation of Java’s Map interface
+                HashMap<String, Boolean> company = tmp.getCompany();
+                if (company != null) {
+                    for (Map.Entry<String, Boolean> stringBooleanEntry : tmp.getCompany().entrySet()) {
+                        Map.Entry pair = stringBooleanEntry;
+                        Log.e(TAG, "HashMap:  " + pair.getKey() + " = " + pair.getValue());
                     }
                 }
             }
@@ -83,12 +81,13 @@ public class RegisteredTravelsFragment extends Fragment implements IRegistered{/
     /**
      * function representing the button in the holder of the recyclerview,
      * it gets a travel and a chosen company, and behaves according to requestType of the travel
+     *
      * @param selectedItem selected company by spinner, only relevant for sent state
-     * @param travel selected item in recyclerview = selected travel
+     * @param travel       selected item in recyclerview = selected travel
      */
     @Override
     public void accept(String selectedItem, Travel travel) {
-        switch (travel.getRequestType().getCode()){
+        switch (travel.getRequestType().getCode()) {
             case 0:
                 Toast.makeText(parentActivity.getBaseContext(), selectedItem, Toast.LENGTH_LONG).show();
                 // remove all companies, except the chosen company, and turn it's flag to 'true'

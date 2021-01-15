@@ -13,12 +13,18 @@ import java.util.List;
  **/
 public interface ITravelDataSource {
     void addTravel(Travel travel);
+
     void updateTravel(Travel travel);
+
     void removeTravel(String travelId);
+
     List<Travel> getAllTravels();
+
     MutableLiveData<Boolean> getIsSuccess();
+
     interface NotifyToTravelListListener {
         void onTravelsChanged();
     }
+
     void setNotifyToTravelListListener(NotifyToTravelListListener l);
-  }
+}

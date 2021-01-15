@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -35,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         //setContentView(R.layout.activity_login);
         binding.setLoginViewModel(loginViewModel);
-        errorText = (TextView) findViewById(R.id.IdErrorText);
-        sharedPreferences = getSharedPreferences("USER",MODE_PRIVATE);
+        errorText = findViewById(R.id.IdErrorText);
+        sharedPreferences = getSharedPreferences("USER", MODE_PRIVATE);
     }
 
 
@@ -64,11 +65,11 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
-                            errorText.setText("We sent to your email ("+ loginViewModel.form.getEmail() +") a verification message request. verify for login.");
+                            errorText.setText(String.format("We sent to your email (%s) a verification message request. verify for login.", loginViewModel.form.getEmail()));
                         } else {
                             Log.e(TAG, "sendEmailVerification failed!", task.getException());
                             Toast.makeText(getApplicationContext(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
-                            errorText.setText("Failed to send verification email to "+ loginViewModel.form.getEmail()+".");
+                            errorText.setText("Failed to send verification email to " + loginViewModel.form.getEmail() + ".");
                         }
                     }
                 });
@@ -81,9 +82,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void signInOnClick(View view) {
         String userEmail = loginViewModel.form.getEmail();
-        if (!validateForm()){
+        if (!validateForm()) {
             errorText.setText("one or two of the fields are empty");
             return;
         }
@@ -95,15 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                             Log.e(TAG, "signIn: Success!");
                             // update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
-                            if (!user.isEmailVerified())
-                            {
-                                errorText.setText("You need to verify your email ("+ userEmail +") for log in.");
+                            if (!user.isEmailVerified()) {
+                                errorText.setText("You need to verify your email (" + userEmail + ") for log in.");
                                 return;
                             }
                             Toast.makeText(LoginActivity.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
                             savePreferences();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("userEmail",user.getEmail());
+                            intent.putExtra("userEmail", user.getEmail());
                             errorText.setText("");
                             startActivity(intent);
                         } else {
@@ -123,8 +124,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.e(TAG, "createAccount: Success!");
                             sendEmailVerification();
-                            }
-                        else {
+                        } else {
                             Log.e(TAG, "createAccount: Fail!", task.getException());
                             Toast.makeText(getApplicationContext(), "Authentication failed!", Toast.LENGTH_SHORT).show();
                             errorText.setText("This email is not valid, or already exists");
@@ -148,27 +148,27 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) {
                             Toast.makeText(getApplicationContext(), "Verification email sent to " + loginViewModel.form.getEmail(), Toast.LENGTH_SHORT).show();
-                            errorText.setText("We sent to your email ("+ loginViewModel.form.getEmail() +") a verification message request. verify for reset password.");
+                            errorText.setText("We sent to your email (" + loginViewModel.form.getEmail() + ") a verification message request. verify for reset password.");
                         } else {
                             Log.e(TAG, "sendEmailVerification failed!", task.getException());
                             Toast.makeText(getApplicationContext(), "Failed to send verification email.", Toast.LENGTH_SHORT).show();
-                            errorText.setText("Failed to send verification email to "+ loginViewModel.form.getEmail()+".");
+                            errorText.setText("Failed to send verification email to " + loginViewModel.form.getEmail() + ".");
                         }
                     }
                 });
     }
 
-    private void savePreferences(){
+    private void savePreferences() {
         String emailData = loginViewModel.form.getEmail().trim();
         String passwordData = loginViewModel.form.getPassword().trim();
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("Email",emailData );
-        editor.putString("Pss",passwordData);
+        editor.putString("Email", emailData);
+        editor.putString("Pss", passwordData);
         editor.commit();
     }
 
-    private void loadPreferences(){
-        loginViewModel.form.setEmail(sharedPreferences.getString("Email",""));
-        loginViewModel.form.setPassword(sharedPreferences.getString("Pss",""));
+    private void loadPreferences() {
+        loginViewModel.form.setEmail(sharedPreferences.getString("Email", ""));
+        loginViewModel.form.setPassword(sharedPreferences.getString("Pss", ""));
     }
 }

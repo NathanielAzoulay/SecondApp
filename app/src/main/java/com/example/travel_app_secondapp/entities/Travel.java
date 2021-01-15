@@ -21,59 +21,92 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Entity (tableName = "travels")
+@Entity(tableName = "travels")
 public class Travel {
     @NonNull
     @PrimaryKey
     private String travelId = "id";
     private String clientName;
-	private String clientPhone;
+    private String clientPhone;
     private String clientEmail;
-	private Integer numPassengers = 0;
-	
-	@TypeConverters(UserLocationConverter.class)
-	private UserLocation travelLocation;
+    private Integer numPassengers = 0;
+
+    @TypeConverters(UserLocationConverter.class)
+    private UserLocation travelLocation;
 
     @TypeConverters(UserLocationsConverter.class)
     private List<UserLocation> destLocations;
-	
-	@TypeConverters(RequestType.class)
+
+    @TypeConverters(RequestType.class)
     private RequestType requestType;
 
     @TypeConverters(DateConverter.class)
     private Date travelDate;
-	
+
     @TypeConverters(DateConverter.class)
     private Date arrivalDate;
 
     @TypeConverters(DateConverter.class)
     private Date createDate;
-		
-	private HashMap<String, Boolean> company;
-    
+
+    private HashMap<String, Boolean> company;
+
     // with these methods the fire base can place all the members in our class
-	public String getTravelId(){
-	    return this.travelId;
+    public String getTravelId() {
+        return this.travelId;
     }
-    public String getClientName() {return this.clientName; }
-    public String getClientPhone() {return this.clientPhone; }
-    public String getClientEmail() {return this.clientEmail; }
-    public Integer getNumPassengers() { return this.numPassengers; }
-    public UserLocation getTravelLocation() {return this.travelLocation;}
-    public List<UserLocation> getDestLocations() { return destLocations; }
-    public RequestType getRequestType() { return this.requestType;}
-    public Date getTravelDate() { return this.travelDate;}
-    public Date getArrivalDate() { return this.arrivalDate;}
-    public Date getCreateDate() { return this.createDate;}
-    public HashMap<String, Boolean> getCompany() { return this.company;}
+
+    public String getClientName() {
+        return this.clientName;
+    }
+
+    public String getClientPhone() {
+        return this.clientPhone;
+    }
+
+    public String getClientEmail() {
+        return this.clientEmail;
+    }
+
+    public Integer getNumPassengers() {
+        return this.numPassengers;
+    }
+
+    public UserLocation getTravelLocation() {
+        return this.travelLocation;
+    }
+
+    public List<UserLocation> getDestLocations() {
+        return destLocations;
+    }
+
+    public RequestType getRequestType() {
+        return this.requestType;
+    }
+
+    public Date getTravelDate() {
+        return this.travelDate;
+    }
+
+    public Date getArrivalDate() {
+        return this.arrivalDate;
+    }
+
+    public Date getCreateDate() {
+        return this.createDate;
+    }
+
+    public HashMap<String, Boolean> getCompany() {
+        return this.company;
+    }
 
 
     public Travel() {
     }
 
     public void setTravelId(String id) {
-	    if (id != null)
-	        this.travelId = id;
+        if (id != null)
+            this.travelId = id;
     }
 
     public void setCompany(HashMap<String, Boolean> company) {
@@ -84,11 +117,11 @@ public class Travel {
         this.requestType = requestType;
     }
 
-    public void setClientName(String clientName)  {
+    public void setClientName(String clientName) {
         this.clientName = clientName;
     }
 
-    public void setClientPhone(String clientPhone)  {
+    public void setClientPhone(String clientPhone) {
         this.clientPhone = clientPhone;
     }
 
@@ -100,7 +133,7 @@ public class Travel {
         this.numPassengers = numPassengers;
     }
 
-    public void setTravelLocation(UserLocation travelLocation)  {
+    public void setTravelLocation(UserLocation travelLocation) {
         this.travelLocation = travelLocation;
     }
 
@@ -108,7 +141,7 @@ public class Travel {
         this.destLocations = destLocations;
     }
 
-    public void setTravelDate(Date travelDate)  {
+    public void setTravelDate(Date travelDate) {
         this.travelDate = travelDate;
     }
 
@@ -116,15 +149,15 @@ public class Travel {
         this.arrivalDate = arrivalDate;
     }
 
-    public void setCreateDate(Date createDate)  {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
     public static class DateConverter {
-        static SimpleDateFormat  format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
         @TypeConverter
-        public static  Date fromTimestamp(String date) throws ParseException {
+        public static Date fromTimestamp(String date) throws ParseException {
             return (date == null ? null : format.parse(date));
         }
 
@@ -133,18 +166,20 @@ public class Travel {
             return date == null ? null : format.format(date);
         }
     }
-	
-	
-	
-	public enum RequestType {
+
+
+    public enum RequestType {
         sent(0), accepted(1), run(2), close(3), paid(4);
         private final Integer code;
+
         RequestType(Integer value) {
             this.code = value;
         }
+
         public Integer getCode() {
             return code;
         }
+
         @TypeConverter
         public static RequestType getType(Integer numeral) {
             for (RequestType ds : values())
@@ -152,6 +187,7 @@ public class Travel {
                     return ds;
             return null;
         }
+
         @TypeConverter
         public static Integer getTypeInt(RequestType requestType) {
             if (requestType != null)
@@ -159,11 +195,9 @@ public class Travel {
             return null;
         }
     }
-	
-	
-	
-	
-	 public static class CompanyConverter {
+
+
+    public static class CompanyConverter {
         @TypeConverter
         public HashMap<String, Boolean> fromString(String value) {
             if (value == null || value.isEmpty())
@@ -252,14 +286,14 @@ public class Travel {
 
     @Exclude
     @Ignore
-    public List<String> getCompanyKeys(){
-        return company!=null? new ArrayList<String>( company.keySet()) : null;
+    public List<String> getCompanyKeys() {
+        return company != null ? new ArrayList<String>(company.keySet()) : null;
     }
 
     @Exclude
     @Ignore
-    public long getTotalDays(){
-	    long diff = arrivalDate.getTime() - travelDate.getTime();
+    public long getTotalDays() {
+        long diff = arrivalDate.getTime() - travelDate.getTime();
         return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 

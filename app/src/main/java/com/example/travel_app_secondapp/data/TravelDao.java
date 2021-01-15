@@ -1,4 +1,5 @@
 package com.example.travel_app_secondapp.data;
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -6,7 +7,9 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
+
 import com.example.travel_app_secondapp.entities.Travel;
+
 import java.util.List;
 
 @Dao
@@ -25,7 +28,7 @@ public interface TravelDao {
     void insert(List<Travel> travels);
 
     @Update
-   void update(Travel travel);
+    void update(Travel travel);
 
     @Delete
     void delete(Travel... travels);

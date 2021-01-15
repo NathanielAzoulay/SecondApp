@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -17,11 +18,11 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravelFirebaseDataSource implements  ITravelDataSource{
+public class TravelFirebaseDataSource implements ITravelDataSource {
 
     private static final String TAG = "Firebase";
 
-    private MutableLiveData<Boolean> isSuccess= new MutableLiveData<>();
+    private MutableLiveData<Boolean> isSuccess = new MutableLiveData<>();
     private List<Travel> allTravelsList;
 
     private NotifyToTravelListListener notifyToTravelListListener;
@@ -37,9 +38,10 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             allTravelsList.clear(); // clear the old one
             if (dataSnapshot.exists()) { // there is any thing there
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Travel travel = snapshot.getValue(Travel.class); //brings all the items
-                    // TODO: check if //
+                    assert travel != null;
+                    // first insert key (although it suppose to happen)
                     travel.setTravelId(snapshot.getKey());
                     allTravelsList.add(travel); // to the list to be presented
                 }
@@ -56,6 +58,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
 
     /**
      * singleton attribute
+     *
      * @return the instance
      */
     public static TravelFirebaseDataSource getInstance() {
@@ -75,7 +78,7 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
     }
 
 
-      public void setNotifyToTravelListListener(NotifyToTravelListListener l) {
+    public void setNotifyToTravelListListener(NotifyToTravelListListener l) {
         notifyToTravelListListener = l;
     }
 
@@ -84,44 +87,37 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
     public void addTravel(Travel p) {
         String id = travels.push().getKey();
         p.setTravelId(id);
-        travels.child(id).setValue(p).addOnSuccessListener(new OnSuccessListener<Void>() {
+        travels.child(id).setValue(p).addOnSuccessListener(aVoid -> {
+            Log.e(TAG, "Travel Added");
+            isSuccess.setValue(true);
+        }).addOnFailureListener(e -> isSuccess.setValue(false));
+    }
+
+    @Override
+    public void removeTravel(String id) {
+        travels.child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.e(TAG, "Travel Added");
-                isSuccess.setValue(true);
+                Log.e(TAG, "Travel Removed");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                isSuccess.setValue(false);
+                Log.e(TAG, "Failure removing Travel");
             }
         });
-    }
-
-    @Override
-    public  void removeTravel(String id) {
-          travels.child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                       Log.e(TAG, "Travel Removed");
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "Failure removing Travel");
-                                }
-                            });
     }
 
 
     /**
      * function that updates the travel in the realtime database (by remove and add)
+     *
      * @param toUpdate
      */
     @Override
     public void updateTravel(final Travel toUpdate) {
-             removeTravel(toUpdate.getTravelId());
-             addTravel(toUpdate);
+        removeTravel(toUpdate.getTravelId());
+        addTravel(toUpdate);
     }
 
     @Override
@@ -134,6 +130,10 @@ public class TravelFirebaseDataSource implements  ITravelDataSource{
     }
 
 
+    // for serviceNotification
+    public void setServiceListener(ChildEventListener childEventListener) {
+        travels.addChildEventListener(childEventListener);
+    }
 
 
 }

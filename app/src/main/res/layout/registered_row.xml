@@ -6,7 +6,9 @@
     <data>
 
         <import type="com.example.travel_app_secondapp.entities.Travel.DateConverter" />
+
         <import type="com.example.travel_app_secondapp.entities.Travel.RequestType" />
+
         <variable
             name="travel"
             type="com.example.travel_app_secondapp.entities.Travel" />
@@ -20,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,6 +35,7 @@
                 android:orientation="horizontal"
                 android:background="@{@intArray/RequestTypeColor[travel.requestType.code]}"
                 android:padding="4dp">
+
                 <TextView
                     android:id="@+id/typeTextView"
                     android:layout_width="0dp"
@@ -40,7 +44,7 @@
                     android:textSize="13sp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/createdTextView"
@@ -50,14 +54,16 @@
                     android:textSize="13sp"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:contentDescription="Your requests"
                     android:id="@+id/iconImageView"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -80,37 +86,42 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="start: "
                             android:textSize="14sp"
                             android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/startTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{DateConverter.dateToTimestamp(travel.travelDate)}"
                             android:textSize="14sp"
-                            android:gravity="end"/>
+                            android:gravity="end" />
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="end:   "
                             android:textSize="14sp"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/endTextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{DateConverter.dateToTimestamp(travel.arrivalDate)}"
                             android:textSize="14sp"
-                            android:gravity="end"/>
+                            android:gravity="end" />
                     </LinearLayout>
 
                     <RelativeLayout
@@ -128,8 +139,7 @@
                             android:layout_height="wrap_content"
                             android:entries="@{travel.companyKeys}"
                             android:enabled="@{travel.requestType == RequestType.sent}"
-                            android:clickable="@{travel.requestType == RequestType.sent}"
-                            />
+                            android:clickable="@{travel.requestType == RequestType.sent}" />
 
                     </RelativeLayout>
 
@@ -152,6 +162,7 @@
                         android:textStyle="bold"
                         tools:layout_editor_absoluteX="304dp"
                         tools:layout_editor_absoluteY="16dp" />
+
                     <Button
                         android:id="@+id/acceptButton"
                         android:layout_width="100dp"

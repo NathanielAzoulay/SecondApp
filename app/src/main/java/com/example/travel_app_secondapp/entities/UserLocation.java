@@ -7,6 +7,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.List;
@@ -38,11 +40,11 @@ public class UserLocation implements Parcelable {
         return lon;
     }
 
-    public void setLat(double lat){
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
-    public void setLon(double lon){
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
@@ -54,17 +56,18 @@ public class UserLocation implements Parcelable {
     public UserLocation() {
     }
 
-    public UserLocation convertFromLocation(Location location){
-        if (location==null)
+    public UserLocation convertFromLocation(Location location) {
+        if (location == null)
             return null;
-        return new UserLocation(location.getLatitude(),location.getLongitude());
+        return new UserLocation(location.getLatitude(), location.getLongitude());
     }
 
+    @NotNull
     @Override
     public String toString() {
         NumberFormat nf = NumberFormat.getInstance(); // get instance
         nf.setMaximumFractionDigits(2); // set decimal places
-        return  nf.format(lat) + ", " + nf.format(lon);
+        return nf.format(lat) + ", " + nf.format(lon);
     }
 
     @Override
@@ -79,7 +82,7 @@ public class UserLocation implements Parcelable {
     }
 
     // Parcelling part
-    public UserLocation(Parcel in){
+    public UserLocation(Parcel in) {
         this.lat = in.readDouble();
         this.lon = in.readDouble();
     }

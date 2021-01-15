@@ -38,6 +38,7 @@ import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 import com.example.travel_app_secondapp.ui.MainActivity;
 import com.example.travel_app_secondapp.ui.TravelViewModel;
+import com.example.travel_app_secondapp.utils.ServiceNotification;
 import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.io.IOException;
@@ -50,7 +51,7 @@ import java.util.Map;
 
 import static java.lang.Thread.sleep;
 
-public class CompanyTravelsFragment extends Fragment  implements companyAdapter.ICompany {
+public class CompanyTravelsFragment extends Fragment implements companyAdapter.ICompany {
 
     private final List<Travel> travelList = new ArrayList<>();
     private TravelViewModel companyTravelsViewModel;
@@ -61,7 +62,6 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     // Define a listener that responds to location updates
     LocationListener locationListener;
     MainActivity parentActivity;
-    String companyName;
     UserLocation userLocation;
     private final double MAX_DIST = 8000.0;
     double max_distance = 0;
@@ -70,17 +70,16 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         parentActivity = (MainActivity) getActivity();
-        // takes only the name of the email address (example: monalisa@gmail.com -> monalisa)
-        companyName = parentActivity.getUserEmail().replaceAll("@[a-z]+\\.+[a-z]+", "");
         locationManager = (LocationManager) parentActivity.getSystemService(Context.LOCATION_SERVICE);
         userLocation = new UserLocation(curLatitude, curLongitude);
 
         companyTravelsViewModel = new ViewModelProvider(this).get(TravelViewModel.class);
 
-        companyBinding = FragmentTravelsCompanyBinding.inflate(inflater,container,false);
-        companyAdapter adapter = new companyAdapter(travelList,this);
+        companyBinding = FragmentTravelsCompanyBinding.inflate(inflater, container, false);
+        companyAdapter adapter = new companyAdapter(travelList, this);
         companyBinding.companyRecyclerView.setAdapter(adapter);
 
+        // Watch for changes in the live data at the view model
         companyTravelsViewModel.getAllCompanyTravels(userLocation, max_distance).observe(getViewLifecycleOwner(), new Observer<List<Travel>>() {
             @Override
             public void onChanged(List<Travel> travels) {
@@ -107,6 +106,8 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             }
         });
 
+        // Creates the notification service
+        createNotificationService();
 
         // Define a listener that responds to location updates
         locationListener = new LocationListener() {
@@ -147,7 +148,7 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
             locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20*1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20 * 1000, 0, locationListener);
             companyBinding.progressbar.setVisibility(View.VISIBLE);
         }
     }
@@ -161,7 +162,7 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
                 // Permission is granted
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             } else {
-                //Toast.makeText(this, "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(parentActivity.getBaseContext(), "Until you grant the permission, we cannot display the location", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -176,11 +177,9 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
             if (addresses.size() > 0) {
                 return addresses.get(0).getAddressLine(0);
             }
-            return "unknown place: \n ("+location.getLat()+", "+location.getLon()+")";
-        }
-        catch(
-                IOException e)
-        {
+            return "unknown place: \n (" + location.getLat() + ", " + location.getLon() + ")";
+        } catch (
+                IOException e) {
             e.printStackTrace();
         }
         return "IOException ...";
@@ -191,12 +190,12 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     public void send(Travel travel) {
         if (travel.getCompany() == null)
             travel.setCompany(new HashMap<>());
-        travel.getCompany().put(companyName, false);
+        travel.getCompany().put(parentActivity.getCompanyName(), false);
         companyTravelsViewModel.updateTravel(travel);
     }
 
     @Override
-    public void sendEmail(String emailAddress){
+    public void sendEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});
@@ -207,9 +206,9 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     }
 
     @Override
-    public void phoneCall(String phoneNumber){
+    public void phoneCall(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:"+phoneNumber));
+        intent.setData(Uri.parse("tel:" + phoneNumber));
         startActivity(intent);
     }
 
@@ -217,18 +216,28 @@ public class CompanyTravelsFragment extends Fragment  implements companyAdapter.
     @Override
     public List<String> getPlaces(List<UserLocation> locations) {
         List<String> places = new ArrayList<>();
-        for (UserLocation location : locations){
+        for (UserLocation location : locations) {
             places.add(getPlace(location));
         }
         return places;
     }
 
     @Override
-    public boolean isSendButtonEnabled(Travel travel){
-        if (travel.getCompany() != null){
-            return (travel.getCompany().get(companyName) == null);
+    public boolean isSendButtonEnabled(Travel travel) {
+        if (travel.getCompany() != null) {
+            return (travel.getCompany().get(parentActivity.getCompanyName()) == null);
         }
         return (travel.getRequestType() == Travel.RequestType.sent);
     }
 
+
+    /**
+     * create a service with company user email to notification about travel
+     * that accepted by client to this company
+     */
+    private void createNotificationService() {
+        Intent serviceIntent = new Intent(parentActivity, ServiceNotification.class);
+        serviceIntent.putExtra("companyName", parentActivity.getUserEmail());
+        parentActivity.startService(serviceIntent);
+    }
 }

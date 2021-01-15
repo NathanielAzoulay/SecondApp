@@ -15,12 +15,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class bindingAdapters {
-    public interface Validation
-    {
+    public interface Validation {
         public boolean validate(boolean setMsg);
     }
 
     static SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
     @BindingAdapter("error")
     public static void setError(EditText editText, Object strOrResId) {
         if (strOrResId instanceof Integer) {

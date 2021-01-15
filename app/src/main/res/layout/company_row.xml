@@ -5,10 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="com.example.travel_app_secondapp.entities.Travel.DateConverter" />
+
         <variable
             name="travel"
             type="com.example.travel_app_secondapp.entities.Travel" />
+
         <variable
             name="company"
             type="com.example.travel_app_secondapp.adapters.companyAdapter.ICompany" />
@@ -31,6 +34,7 @@
                 android:orientation="horizontal"
                 android:background="@{@intArray/RequestTypeColor[travel.requestType.code]}"
                 android:padding="4dp">
+
                 <TextView
                     android:id="@+id/typeTextView"
                     android:layout_width="0dp"
@@ -39,7 +43,7 @@
                     android:textSize="13sp"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/createdTextView"
@@ -49,8 +53,9 @@
                     android:textSize="13sp"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,8 +66,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -122,13 +126,13 @@
                 </LinearLayout>
 
 
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="4dp"
                     android:layout_gravity="center">
+
                     <View
                         android:layout_width="1.5dp"
                         android:layout_height="match_parent"
@@ -166,6 +170,7 @@
                         android:backgroundTint="@{company.isSendButtonEnabled(travel)? @color/button_enabled_company : @color/gray }" />
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1.5dp"
@@ -173,6 +178,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:background="@color/light_gray" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,7 +225,6 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
 
 
 </layout>

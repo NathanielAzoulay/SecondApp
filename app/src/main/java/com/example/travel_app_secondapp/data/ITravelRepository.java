@@ -8,6 +8,7 @@ import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 
 import java.util.List;
+
 /**
  * interfaces allows replacement of the realization of the bottom layer
  * without having to make any change in the layer above it,
@@ -16,12 +17,18 @@ import java.util.List;
 public interface ITravelRepository {
 
     void addTravel(Travel travel);
+
     void updateTravel(Travel travel);
+
     void removeTravel(Travel travel);
 
     LiveData<List<Travel>> getAllTravels();
+
     LiveData<List<Travel>> getAllRegisteredTravels(String userEmail);
+
     LiveData<List<Travel>> getAllCompanyTravels(UserLocation userLocation, double max);
+
     LiveData<List<Travel>> getAllHistoryTravels();
+
     MutableLiveData<Boolean> getIsSuccess();
 }

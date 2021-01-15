@@ -34,7 +34,7 @@ public class FormLogin extends BaseObservable {
     public boolean isValid() {
         boolean validEmail = isEmailValid(false);
         boolean validPassword = isPasswordValid(false);
-        return  validPassword && validEmail;
+        return validPassword && validEmail;
     }
 
     @Bindable
@@ -66,11 +66,11 @@ public class FormLogin extends BaseObservable {
 
 
     public boolean isEmailValid(boolean setMsg) {
-        if(getEmail() == null)
+        if (getEmail() == null)
             return false;
         String regex = "^(.+)@(.+)$";
-        if (!RegexValidation(getEmail(),regex)) {
-            if(setMsg)
+        if (!RegexValidation(getEmail(), regex)) {
+            if (setMsg)
                 emailError.set(R.string.email_not_valid);
             return false;
         }
@@ -78,17 +78,17 @@ public class FormLogin extends BaseObservable {
         return true;
     }
 
-    public boolean RegexValidation(String value,String regex){
+    public boolean RegexValidation(String value, String regex) {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
         return matcher.matches();
     }
 
-    public boolean isPasswordValid(boolean setMsg){
-        if(getPassword() == null)
+    public boolean isPasswordValid(boolean setMsg) {
+        if (getPassword() == null)
             return false;
-        if (getPassword().length() < 5){
-            if(setMsg)
+        if (getPassword().length() < 5) {
+            if (setMsg)
                 passwordError.set(R.string.password_not_valid);
             return false;
         }

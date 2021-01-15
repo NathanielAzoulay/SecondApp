@@ -42,8 +42,8 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
         historyTravelsViewModel =
                 new ViewModelProvider(this).get(TravelViewModel.class);
 
-        historyBinding = FragmentTravelsHistoryBinding.inflate(inflater,container,false);
-        historyAdapter adapter = new historyAdapter(travelList,this);
+        historyBinding = FragmentTravelsHistoryBinding.inflate(inflater, container, false);
+        historyAdapter adapter = new historyAdapter(travelList, this);
         historyBinding.registeredRecyclerView.setAdapter(adapter);
 
         parentActivity = (MainActivity) getActivity();
@@ -56,14 +56,14 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
                 adapter.notifyDataSetChanged();
                 for (Travel tmp : travels) {
                     Log.e(TAG, tmp.getClientName() + ":  ");
-                    Log.e(TAG, tmp.getTravelId() );
-                    Log.e(TAG, tmp.getClientPhone() );
-                    Log.e(TAG, tmp.getRequestType().toString() );
-                    Log.e(TAG, tmp.getArrivalDate() +"\n");
+                    Log.e(TAG, tmp.getTravelId());
+                    Log.e(TAG, tmp.getClientPhone());
+                    Log.e(TAG, tmp.getRequestType().toString());
+                    Log.e(TAG, tmp.getArrivalDate() + "\n");
                     //https://www.callicoder.com/java-hashmap/
                     //HashMap is a hash table based implementation of Java’s Map interface
                     HashMap<String, Boolean> company = tmp.getCompany();
-                    if(company != null){
+                    if (company != null) {
                         Iterator it = tmp.getCompany().entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry pair = (Map.Entry) it.next();
@@ -71,7 +71,8 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
                         }
                     }
                 }
-            }});
+            }
+        });
         return historyBinding.getRoot();
     }
 
@@ -82,7 +83,7 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
     }
 
     @Override
-    public void sendEmail(String emailAddress){
+    public void sendEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("mailto:")); // only email apps should handle this
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAddress});

@@ -57,6 +57,7 @@ public class historyAdapter extends RecyclerView.Adapter<historyAdapter.viewHold
 
     public interface IHistory {
         void send(Travel travel);
+
         void sendEmail(String emailAddress);
     }
 

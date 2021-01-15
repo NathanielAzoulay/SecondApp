@@ -9,7 +9,7 @@
         android:id="@+id/nav_registered"
         android:name="com.example.travel_app_secondapp.ui.registeredTravels.RegisteredTravelsFragment"
         android:label="@string/menu_registered_travels"
-        tools:layout="@layout/fragment_travels_registered" >
+        tools:layout="@layout/fragment_travels_registered">
         <argument
             android:name="userEmail"
             app:argType="string"

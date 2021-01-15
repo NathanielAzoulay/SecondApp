@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.Menu;
 
 import com.example.travel_app_secondapp.R;
+import com.example.travel_app_secondapp.databinding.NavHeaderMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     protected String userEmail;
+    protected String companyName;
+
+    //ActivityMainBinding
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,12 +33,19 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             userEmail = bundle.getString("userEmail");
+            // takes only the name of the email address (example: monalisa@gmail.com -> monalisa)
+            companyName = userEmail.replaceAll("@[a-z]+\\.+[a-z]+", "");
         }
+        View viewHeader = navigationView.getHeaderView(0);
+        NavHeaderMainBinding navViewHeaderBinding = NavHeaderMainBinding.bind(viewHeader);
+        navViewHeaderBinding.setUserEmail(userEmail);
+
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_registered, R.id.nav_company, R.id.nav_history)
                 .setDrawerLayout(drawer)
@@ -60,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
 
     public String getUserEmail() {
         return userEmail;
+    }
+
+    public String getCompanyName() {
+        return companyName;
     }
 
 }
