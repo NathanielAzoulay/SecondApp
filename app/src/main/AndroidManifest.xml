@@ -27,6 +27,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Travel_App_SecondApp.NoActionBar">
         </activity>
+        <service android:name="com.example.travel_app_secondapp.utils.ServiceNotification"/>
     </application>
 
 </manifest>
