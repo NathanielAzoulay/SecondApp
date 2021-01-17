@@ -169,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:onClick="@{() -> registered.accept(companySpinner.getSelectedItem().toString(), travel)}"
                         android:text="@{@stringArray/RequestTypeButton[travel.requestType.code]}"
-                        android:backgroundTint="@{@intArray/RTBColor[travel.requestType.code]}"
+                        android:backgroundTint="@color/button_accept"
                         android:enabled="@{(travel.company != null) &amp;&amp; ( travel.requestType.code &lt; 3)}"
                         tools:layout_editor_absoluteX="293dp"
                         tools:layout_editor_absoluteY="76dp" />

@@ -1,126 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <import type="android.view.View" />
         <variable
             name="loginViewModel"
             type="com.example.travel_app_secondapp.ui.LoginViewModel" />
     </data>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.LoginActivity">
+        android:src="@drawable/bg_buses"
+        android:scaleType="centerCrop" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/IdClientEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Client Email Address"
-                android:inputType="textEmailAddress"
-                android:text="@={loginViewModel.form.email}"
-                app:error="@{loginViewModel.form.emailError}"
-                app:ValidationOnFocus="@{loginViewModel.form::isEmailValid}" />
-
-            <EditText
-                android:id="@+id/IdPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:text="@={loginViewModel.form.password}"
-
-                app:error="@{loginViewModel.form.passwordError}" />
+            android:orientation="vertical"
+            >
 
             <TextView
-                android:id="@+id/IdErrorText"
-                android:layout_width="fill_parent"
+
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#FF0000">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="Welcome To"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:shadowColor="@color/white"
+                android:shadowDx="0.0"
+                android:shadowDy="0.0"
+                android:shadowRadius="8"
+                />
+            <TextView
 
-            </TextView>
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:text="Travel App Part 2!"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:shadowColor="@color/white"
+                android:shadowDx="0.0"
+                android:shadowDy="0.0"
+                android:shadowRadius="8"
+                />
             <LinearLayout
-                android:id="@+id/sign_in_up_buttons"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/email_password_fields"
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
                 android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:paddingRight="16dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginEnd="25dp">
+
+
+                <EditText
+                    android:id="@+id/IdClientEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Client Email Address"
+                    android:inputType="textEmailAddress"
+                    android:text="@={loginViewModel.form.email}"
+                    app:ValidationOnFocus="@{loginViewModel.form::isEmailValid}"
+                    app:error="@{loginViewModel.form.emailError}"
+                    android:background="@color/white"
+                    android:padding="5dp"
+                    />
+
+                <EditText
+                    android:layout_marginTop="7dp"
+                    android:id="@+id/IdPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:text="@={loginViewModel.form.password}"
+                    app:error="@{loginViewModel.form.passwordError}"
+                    android:background="@color/white"
+                    android:padding="5dp"/>
+
+                <TextView
+                    android:layout_marginTop="2dp"
+                    android:id="@+id/IdErrorText"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF0000">
+                </TextView>
 
                 <Button
                     android:id="@+id/btn_email_sign_in"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sign In"
                     android:layout_marginLeft="4dp"
                     android:layout_marginRight="4dp"
                     android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="signInOnClick" />
+                    android:onClick="signInOnClick"
+                    android:text="Log In"
+                    android:layout_marginBottom="40dp"/>
 
-                <Button
-                    android:id="@+id/btn_email_sign_up"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Create Account"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="signUpOnClick" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/verify_reset_buttons"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/sign_in_up_buttons"
-                android:orientation="horizontal"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <Button
-                    android:id="@+id/btn_email_verify"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Verify Email"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:enabled="@{loginViewModel.form.valid}"
-                    android:onClick="verifyEmailOnClick" />
-
-                <Button
-                    android:id="@+id/btn_password_reset"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Reset Password"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginRight="4dp"
-                    android:enabled="@{loginViewModel.form.ok}"
-                    android:onClick="resetPasswordOnClick" />
+                    android:background="#94FFFFFF"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="10dp">
 
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/sign_in_up_buttons"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/email_password_fields"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Not a member? "/>
+
+                        <TextView
+                            android:id="@+id/btn_email_sign_up"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:enabled="@{loginViewModel.form.valid}"
+                            android:onClick="signUpOnClick"
+                            android:textColor="@color/black"
+                            android:text="Sign up now"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layout_email_verification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/email_password_fields"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:visibility="@{loginViewModel.form.valid ? View.GONE : View.VISIBLE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="For verify your Email " />
+
+                        <TextView
+                            android:id="@+id/btn_email_verify"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="verifyEmailOnClick"
+                            android:text="verify again"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/email_password_fields"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:visibility="@{loginViewModel.form.ok ? View.VISIBLE : View.GONE }">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Forgot your password? " />
+
+                        <TextView
+                            android:id="@+id/btn_password_reset"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:onClick="resetPasswordOnClick"
+                            android:text="reset password"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
         </LinearLayout>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </FrameLayout>
 
 
 </layout>
