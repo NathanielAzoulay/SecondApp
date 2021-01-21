@@ -13,7 +13,8 @@ import java.util.List;
 
 /**
  * The repository responsibilities are:
- * to make the interfacing with the data sources with abstraction
+ * to gives an abstract data to the viewModel
+ * to interface with the data sources
  * to save the history of the database which brought from firebase to a local database
  * to filter list which it gets from the firebase database for each fragment
  */
@@ -23,16 +24,26 @@ public class TravelRepository implements ITravelRepository {
     private final MutableLiveData<List<Travel>> mutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Travel>> registeredMutableLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<Travel>> companyMutableLiveData = new MutableLiveData<>();
+
     private List<Travel> travelList;
     private final List<Travel> travelsRegistered = new ArrayList<>();
     private final List<Travel> travelsCompany = new ArrayList<>();
     private final List<Travel> travelsHistory = new ArrayList<>();
 
+
+
+    private static TravelRepository instance;
+
+
+    /**
+     * those variables are used for the function call "onChanged"
+     * at any time we call the function "get" of some mutable live data
+     * (example: getAllRegisteredTravels) the relevant values of those variables will changed
+     * those variables are needed for the filtering functions (such as "filterCompanyTravels")
+     */
+    String userEmail = "none", companyName = "none";
     UserLocation userLoc;
     double maxDist;
-
-    String userEmail = "none", companyName = "none";
-    private static TravelRepository instance;
 
     /**
      * singleton attribute
@@ -57,6 +68,7 @@ public class TravelRepository implements ITravelRepository {
                 travelList = travelDataSource.getAllTravels();
                 registeredMutableLiveData.setValue(filterRegisteredTravels());
                 companyMutableLiveData.setValue(filterCompanyTravels());
+                // not in use
                 mutableLiveData.setValue(travelList);
                 historyDataSource.clearTable();
                 historyDataSource.addTravel(filterHistoryTravels(travelList));

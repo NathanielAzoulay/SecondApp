@@ -1,12 +1,7 @@
 package com.example.travel_app_secondapp.adapters;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +11,18 @@ import com.example.travel_app_secondapp.entities.UserLocation;
 
 import java.util.List;
 
+/**
+ * Adapter representing the company fragment's recyclerView adapter
+ */
 public class companyAdapter extends RecyclerView.Adapter<companyAdapter.viewHolder> {
 
     List<Travel> travels;
     ICompany iCompany;
-
+    /**
+     * CTOR for the adapter gets 2 params
+     * @param travels the list of travels which we want to present
+     * @param iCompany the interface of company's fragment
+     */
     public companyAdapter(List<Travel> travels, ICompany iCompany) {
         this.travels = travels;
         this.iCompany = iCompany;
@@ -48,6 +50,9 @@ public class companyAdapter extends RecyclerView.Adapter<companyAdapter.viewHold
     }
 
 
+    /**
+     * viewHolder is needed to improve user performance/presentation
+     */
     public class viewHolder extends RecyclerView.ViewHolder {
 
         CompanyRowBinding CompanyRowBinding;
@@ -58,6 +63,9 @@ public class companyAdapter extends RecyclerView.Adapter<companyAdapter.viewHold
         }
     }
 
+    /**
+     * Interface of al the functions that the company fragment need to implement
+     */
     public interface ICompany {
         void send(Travel travel);
 

@@ -1,21 +1,11 @@
 package com.example.travel_app_secondapp.ui;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
 
 import com.example.travel_app_secondapp.BR;
 import com.example.travel_app_secondapp.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.concurrent.Executor;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,11 +14,6 @@ public class FormLogin extends BaseObservable {
     private String password;
     public ObservableField<Integer> emailError = new ObservableField<>();
     public ObservableField<Integer> passwordError = new ObservableField<>();
-    //private FirebaseAuth mAuth;
-//    FormLogin(){
-//        mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//    }
 
     @Bindable
     public boolean isValid() {
@@ -38,14 +23,14 @@ public class FormLogin extends BaseObservable {
     }
 
     @Bindable
-    public boolean isOk() {
+    public boolean isEmailOk() {
         return isEmailValid(false);
     }
 
     public void setEmail(String email) {
         this.email = email;
         notifyPropertyChanged(BR.valid);
-        notifyPropertyChanged(BR.ok);
+        notifyPropertyChanged(BR.emailOk);
     }
 
     public void setPassword(String password) {

@@ -164,7 +164,7 @@
                         android:id="@+id/acceptButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:onClick="@{() -> history.send(travel)}"
+                        android:onClick="@{() -> history.confirm(travel)}"
                         android:text="confirm"
                         android:enabled="@{travel.requestType == RequestType.close}"
                         android:backgroundTint="@{(travel.requestType == RequestType.close) ? @color/button_confirm : @color/light_gray }" />

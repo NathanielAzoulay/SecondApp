@@ -17,29 +17,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.travel_app_secondapp.R;
 import com.example.travel_app_secondapp.adapters.companyAdapter;
-import com.example.travel_app_secondapp.adapters.registeredAdapter;
 import com.example.travel_app_secondapp.databinding.FragmentTravelsCompanyBinding;
-import com.example.travel_app_secondapp.databinding.FragmentTravelsRegisteredBinding;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.entities.UserLocation;
 import com.example.travel_app_secondapp.ui.MainActivity;
 import com.example.travel_app_secondapp.ui.TravelViewModel;
 import com.example.travel_app_secondapp.utils.ServiceNotification;
-import com.google.android.gms.location.FusedLocationProviderClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -154,6 +145,13 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
     }
 
 
+    /**
+     * after requesting for permission from the user to enable the GPS use we also need to get the
+     * permission result to know what to do
+     * @param requestCode code request
+     * @param permissions the permission we got
+     * @param grantResults if granted or not in from those
+     */
     @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -168,6 +166,12 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
     }
 
 
+    /**
+     * function that get a user location and translate it to an understandable address
+     * (Lat: 2271287 Lon: 263276  --> "david shlomztion 26 Netanya")
+     * @param location UserLocation instance
+     * @return string address
+     */
     @Override
     public String getPlace(UserLocation location) {
         Geocoder geocoder = new Geocoder(parentActivity.getBaseContext(), Locale.getDefault());
@@ -194,6 +198,12 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
         companyTravelsViewModel.updateTravel(travel);
     }
 
+    /**
+     * a function that sends an email to the user who's sent that travel,
+     * which found relevant to this company
+     * @param emailAddress only the user address, we assume that the company user has his own user's
+     *                     email address is registered in his phone
+     */
     @Override
     public void sendEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
@@ -205,6 +215,11 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
         }
     }
 
+    /**
+     * a function that sends an email to the user who's sent that travel,
+     * which found relevant to this company
+     * @param phoneNumber only the user phone number
+     */
     @Override
     public void phoneCall(String phoneNumber) {
         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -213,6 +228,11 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
     }
 
 
+    /**
+     * this function uses getPlace() for each location that included inside the selected travel
+     * @param locations all travel's locations in his trip
+     * @return a list of string of addresses of thos locations
+     */
     @Override
     public List<String> getPlaces(List<UserLocation> locations) {
         List<String> places = new ArrayList<>();
@@ -222,6 +242,12 @@ public class CompanyTravelsFragment extends Fragment implements companyAdapter.I
         return places;
     }
 
+    /**
+     * this function check whenever if the send (looks like arrow >) is enabled
+     * by checking if this travel already got your request inside her list of companies requests
+     * @param travel current travel
+     * @return boolean answer
+     */
     @Override
     public boolean isSendButtonEnabled(Travel travel) {
         if (travel.getCompany() != null) {

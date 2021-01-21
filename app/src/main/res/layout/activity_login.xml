@@ -177,7 +177,7 @@
                         android:orientation="horizontal"
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
-                        android:visibility="@{loginViewModel.form.ok ? View.VISIBLE : View.GONE }">
+                        android:visibility="@{loginViewModel.form.emailOk ? View.VISIBLE : View.GONE }">
 
                         <TextView
                             android:layout_width="wrap_content"

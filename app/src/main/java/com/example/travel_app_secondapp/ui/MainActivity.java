@@ -6,8 +6,6 @@ import android.view.Menu;
 
 import com.example.travel_app_secondapp.R;
 import com.example.travel_app_secondapp.databinding.NavHeaderMainBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -24,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected String userEmail;
     protected String companyName;
 
-    //ActivityMainBinding
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

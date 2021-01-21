@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("Email", emailData);
         editor.putString("Pss", passwordData);
-        editor.commit();
+        editor.apply();
     }
 
     private void loadPreferences() {

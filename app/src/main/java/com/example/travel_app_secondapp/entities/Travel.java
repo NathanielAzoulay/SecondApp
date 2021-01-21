@@ -9,11 +9,9 @@ import androidx.room.TypeConverters;
 
 import com.google.firebase.database.Exclude;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -243,7 +241,6 @@ public class Travel {
     }
 
 
-    //    private List<UserLocation> destLocations;
     public static class UserLocationsConverter {
         @TypeConverter
         public List<UserLocation> fromString(String value) {
@@ -284,12 +281,20 @@ public class Travel {
                 '}';
     }
 
+    /**
+     * is needed for showing only the company names in the user interface (useful for binding)
+     * @return the list of companies names(strings)
+     */
     @Exclude
     @Ignore
     public List<String> getCompanyKeys() {
-        return company != null ? new ArrayList<String>(company.keySet()) : null;
+        return company != null ? new ArrayList<>(company.keySet()) : null;
     }
 
+    /**
+     * is needed for showing the total days (useful for binding)
+     * @return the total days from begin of travel till end of travel
+     */
     @Exclude
     @Ignore
     public long getTotalDays() {

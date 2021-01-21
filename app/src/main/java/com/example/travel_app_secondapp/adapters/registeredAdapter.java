@@ -1,13 +1,7 @@
 package com.example.travel_app_secondapp.adapters;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Spinner;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +10,19 @@ import com.example.travel_app_secondapp.entities.Travel;
 
 import java.util.List;
 
+/**
+ * Adapter representing the registered travels fragment's recyclerView adapter
+ */
 public class registeredAdapter extends RecyclerView.Adapter<registeredAdapter.viewHolder> {
 
     List<Travel> travels;
     IRegistered iRegistered;
 
+    /**
+     * CTOR for the adapter gets 2 params
+     * @param travels the list of travels which we want to present
+     * @param iRegistered the interface of the registered travels's fragment
+     */
     public registeredAdapter(List<Travel> travels, IRegistered iRegistered) {
         this.travels = travels;
         this.iRegistered = iRegistered;
@@ -47,7 +49,9 @@ public class registeredAdapter extends RecyclerView.Adapter<registeredAdapter.vi
         return travels.size();
     }
 
-
+    /**
+     * viewHolder is needed to improve user performance/presentation
+     */
     public class viewHolder extends RecyclerView.ViewHolder {
 
         RegisteredRowBinding registeredRowBinding;
@@ -55,24 +59,12 @@ public class registeredAdapter extends RecyclerView.Adapter<registeredAdapter.vi
         public viewHolder(@NonNull RegisteredRowBinding binding) {
             super(binding.getRoot());
             registeredRowBinding = binding;
-
-//            registeredRowBinding.companySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                int check = 0;
-//                @Override
-//                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                        String h= (String) registeredRowBinding.companySpinner.getAdapter().getItem(position);
-//                        Log.i("tatatat",h);
-//                        travels.get(getAdapterPosition()).getCompany().get(h);
-//                }
-//
-//                @Override
-//                public void onNothingSelected(AdapterView<?> parent) {
-//
-//                }
-//            });
         }
     }
 
+    /**
+     * Interface of al the functions that the registered fragment need to implement
+     */
     public interface IRegistered {
         void accept(String selectedItem, Travel travel);
     }

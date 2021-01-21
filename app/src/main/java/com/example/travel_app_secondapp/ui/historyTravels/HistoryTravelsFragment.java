@@ -7,17 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.travel_app_secondapp.R;
 import com.example.travel_app_secondapp.adapters.historyAdapter;
-import com.example.travel_app_secondapp.adapters.registeredAdapter;
 import com.example.travel_app_secondapp.databinding.FragmentTravelsHistoryBinding;
 import com.example.travel_app_secondapp.entities.Travel;
 import com.example.travel_app_secondapp.ui.MainActivity;
@@ -76,12 +71,22 @@ public class HistoryTravelsFragment extends Fragment implements historyAdapter.I
         return historyBinding.getRoot();
     }
 
+    /**
+     * confirm the travel, that it already paid by the company
+     * @param travel selected travel
+     */
     @Override
-    public void send(Travel travel) {
+    public void confirm(Travel travel) {
         travel.setRequestType(Travel.RequestType.paid);
         historyTravelsViewModel.updateTravel(travel);
     }
 
+    /**
+     * a function that sends an email to the user who's sent that travel,
+     * which found relevant to this company
+     * @param emailAddress only the user address, we assume that the company user has his own user's
+     *                     email address is registered in his phone
+     */
     @Override
     public void sendEmail(String emailAddress) {
         Intent intent = new Intent(Intent.ACTION_SENDTO);

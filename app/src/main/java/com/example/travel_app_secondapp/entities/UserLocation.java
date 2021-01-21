@@ -1,20 +1,11 @@
 package com.example.travel_app_secondapp.entities;
 
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
-
-//import java.io.Serializable;
 
 public class UserLocation implements Parcelable {
     private Double lat;
@@ -82,6 +73,7 @@ public class UserLocation implements Parcelable {
     }
 
     // Parcelling part
+    // used for saving the data in Extra of an intent, for passing the data from activity to another
     public UserLocation(Parcel in) {
         this.lat = in.readDouble();
         this.lon = in.readDouble();

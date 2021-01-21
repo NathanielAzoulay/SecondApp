@@ -49,7 +49,6 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
             if (notifyToTravelListListener != null) // if there was something that change there
                 notifyToTravelListListener.onTravelsChanged(); // notify the listener
         }
-
         @Override
         public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -77,12 +76,19 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
         travels.addValueEventListener(valueEventListener);
     }
 
-
+    /**
+     * function that sets a listener for DB change notification
+     * @param l notifyToTravelListListener - the listener instance to be set in the data source.
+     */
     public void setNotifyToTravelListListener(NotifyToTravelListListener l) {
         notifyToTravelListListener = l;
     }
 
 
+    /**
+     * add a new travel to firebase
+     * @param p the travel instance
+     */
     @Override
     public void addTravel(Travel p) {
         String id = travels.push().getKey();
@@ -93,6 +99,10 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
         }).addOnFailureListener(e -> isSuccess.setValue(false));
     }
 
+    /**
+     * delete a travel from firebase
+     * @param id the travel's id for recognition
+     */
     @Override
     public void removeTravel(String id) {
         travels.child(id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -111,8 +121,7 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
 
     /**
      * function that updates the travel in the realtime database (by remove and add)
-     *
-     * @param toUpdate
+     * @param toUpdate the travel instance
      */
     @Override
     public void updateTravel(final Travel toUpdate) {
@@ -120,6 +129,11 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
         addTravel(toUpdate);
     }
 
+    /**
+     * return all the travels from that exist in firebase's realtime DB
+     * Although we need to do the filtering in the firebase's server instead of here
+     * this requirement is out side of our course frames
+     */
     @Override
     public List<Travel> getAllTravels() {
         return allTravelsList;
@@ -130,7 +144,10 @@ public class TravelFirebaseDataSource implements ITravelDataSource {
     }
 
 
-    // for serviceNotification
+    /**
+     * function that sets a listener for service notification
+     * @param childEventListener the listener instance
+     */
     public void setServiceListener(ChildEventListener childEventListener) {
         travels.addChildEventListener(childEventListener);
     }
